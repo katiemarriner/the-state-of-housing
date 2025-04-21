@@ -1,9 +1,10 @@
 <script>
   import { onMount } from 'svelte';
 
+  const url = import.meta.env.BASE_URL;
   let fips;
   onMount(async() => {
-    const res = await fetch('/data/fips.json');
+    const res = await fetch(`${url}/data/fips.json`);
     fips = await res.json();
   })
 

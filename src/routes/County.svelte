@@ -2,9 +2,10 @@
   import { onMount } from 'svelte';
   export let params = {};
 
+  const url = import.meta.env.BASE_URL;
   let data;
   onMount(async () => {
-    const res = await fetch(`/data/counties/${params.id}.json`);
+    const res = await fetch(`${url}/data/counties/${params.id}.json`);
     data = await res.json();
     console.log(data);
   });
