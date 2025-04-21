@@ -16,7 +16,7 @@ function formatDate(date_) {
 };
 
 const max = Number(data[0].month_date_yyyymm);
-const twoYears = max - 200;
+const twoYears = max - 600;
 
 const medianPriceTimeseries = data.filter(d => {
     return Number(d.month_date_yyyymm) >= twoYears;
@@ -40,4 +40,4 @@ Object.keys(combined).forEach(key => {
   io.writeDataSync(`../public/data/counties/${key}.json`, combined[key]);
 });
 
-io.writeDataSync('../src/assets/fips.json', Object.keys(combined));
+io.writeDataSync('../public/data/fips.json', Object.keys(combined));
