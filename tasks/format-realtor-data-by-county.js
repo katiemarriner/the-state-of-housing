@@ -40,4 +40,4 @@ Object.keys(combined).forEach(key => {
   io.writeDataSync(`../public/data/counties/${key}.json`, combined[key]);
 });
 
-io.writeDataSync('../public/data/fips.json', Object.keys(combined));
+io.writeDataSync('../src/assets/fips.json', Object.keys(combined));
