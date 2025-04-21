@@ -12,10 +12,13 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "gh-pages": "^6.3.0",
+    "indian-ocean": "^4.0.3",
     "svelte": "^5.23.1",
+    "underscore": "^1.13.7",
     "vite": "^6.3.1"
   },
   "dependencies": {
+    "regexparam": "^3.0.0",
     "svelte-spa-router": "^4.0.1"
   }
 }
