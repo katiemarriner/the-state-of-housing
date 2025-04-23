@@ -5,7 +5,6 @@
 
 <nav>
   <a href="#/">Home</a>
-  <a href="#/county">County</a>
 </nav>
 
 <main>
