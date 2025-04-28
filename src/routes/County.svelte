@@ -19,7 +19,7 @@
   });
 
   $: width = 500;
-  $: height = width / 1.5;
+  $: height = width / 2;
 
   let maxPrice, dateRange, xScale, yScale, bandWidth, latest, yearAgo, changeYoY
   $: if(data) {
@@ -50,11 +50,18 @@
 
 {#if data && xScale}
   <h1 class="countyName">{data.county_name}</h1>
-  <div class="container-bigNumbers">
-    <div class="label">Median home price {monthYearFormat(parseTime(latest.month_date_yyyymm))}</div>
-    <div class="bigNumber">{currencyFormat(latest.median_listing_price)}</div>
-    <div class="label">Change from previous year</div>
-    <div class="mediumNumber"><span class="">{#if changeYoY > 0} + {:else} - {/if}</span>{ percentFormat(Math.abs(changeYoY)) }</div>
+  <div class="container-bigNumbers" style="width:{width}px;">
+    <div class="container-label">
+      <div class="label">Median home price {monthYearFormat(parseTime(latest.month_date_yyyymm))}</div>
+      <div class="bigNumber currency">{currencyFormat(latest.median_listing_price)}</div>
+    </div>
+    <div class="container-label">
+      <div class="label">Change from previous year</div>
+      <div class="mediumNumber change {changeYoY > 0 ? 'positive' : changeYoY < 0 ? 'negative' : 'zero'}">
+        <span class="{changeYoY > 0 ? 'arrow-up' : changeYoY < 0 ? 'arrow-down' : ''}"></span>
+        { percentFormat(Math.abs(changeYoY)) }
+      </div>
+    </div>
   </div>
   <div class="container-barChart" bind:clientWidth={ width } >
     <svg { width } { height }>
@@ -86,26 +93,60 @@
   }
 
   .container-bigNumbers {
+    display: flex;
+    justify-content: space-between;
+
     .label {
       color: $gray-light;
-      font-family: "Roboto", sans-serif;
+      font-family: "Lekton", monospace;
       font-size: 14px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
     }
 
     .bigNumber {
-      font-family: "Roboto";
+      align-self: end;
+      font-family: "Lekton" monospace;
       font-size: 30px;
-      font-weight: 400;
+      font-weight: 600;
       letter-spacing: 0.5;
     }
 
     .mediumNumber {
-      font-family: "Roboto";
+      font-family: "Lekton" monospace;
       font-size: 20px;
-      font-weight: 400;
+      font-weight: 600;
     }
+
+    .currency {
+      color: $purple;
+    }
+
+    .positive {
+      color: $red-text;
+    }
+
+    .negative {
+      color: $blue-text;
+    }
+  }
+
+  .arrow-up {
+    display: inline-block;
+    width: 0; 
+    height: 0; 
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 8px solid $red-text;
+  }
+
+  .arrow-down {
+    display: inline-block;
+    width: 0; 
+    height: 0; 
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid $blue-text;
   }
   
   svg {
