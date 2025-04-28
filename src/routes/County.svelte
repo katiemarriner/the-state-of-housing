@@ -33,8 +33,7 @@
 
     xScale = scaleBand()
       .domain(dateRange)
-      .range([0, width])
-      .padding(0.1);
+      .range([0, width]);
 
     bandWidth = xScale.bandwidth();
 
@@ -52,26 +51,27 @@
   <h1 class="countyName">{data.county_name}</h1>
   <div class="container-bigNumbers" style="width:{width}px;">
     <div class="container-label">
-      <div class="label">Median home price {monthYearFormat(parseTime(latest.month_date_yyyymm))}</div>
       <div class="bigNumber currency">{currencyFormat(latest.median_listing_price)}</div>
+      <div class="label">Median home price {monthYearFormat(parseTime(latest.month_date_yyyymm))}</div>
     </div>
     <div class="container-label">
-      <div class="label">Change from previous year</div>
       <div class="mediumNumber change {changeYoY > 0 ? 'positive' : changeYoY < 0 ? 'negative' : 'zero'}">
         <span class="{changeYoY > 0 ? 'arrow-up' : changeYoY < 0 ? 'arrow-down' : ''}"></span>
         { percentFormat(Math.abs(changeYoY)) }
       </div>
+      <div class="label">From previous year</div>
     </div>
   </div>
   <div class="container-barChart" bind:clientWidth={ width } >
     <svg { width } { height }>
       <g class="g-bars">
-        {#each data.timeseries as d}
+        {#each data.timeseries as d, i}
           <rect
             x={xScale(d.month_date_yyyymm)}
             width={bandWidth}
             height={height - yScale(d.median_listing_price)}
             y={yScale(d.median_listing_price)}
+            class="{i === 0 ? 'dark-purple' : ''}"
           />
         {/each}
       </g>
@@ -89,12 +89,14 @@
   @import './../lib/style/variables';
 
   .countyName {
-    margin-bottom: 0px;
+    margin-bottom: 10px;
   }
 
   .container-bigNumbers {
     display: flex;
+    align-items: end;
     justify-content: space-between;
+    margin-bottom: 25px;
 
     .label {
       color: $gray-light;
@@ -106,14 +108,14 @@
 
     .bigNumber {
       align-self: end;
-      font-family: "Lekton" monospace;
+      font-family: "Lekton", monospace;
       font-size: 30px;
       font-weight: 600;
       letter-spacing: 0.5;
     }
 
     .mediumNumber {
-      font-family: "Lekton" monospace;
+      font-family: "Lekton", monospace;
       font-size: 20px;
       font-weight: 600;
     }
@@ -123,11 +125,11 @@
     }
 
     .positive {
-      color: $red-text;
+      color: $pink-text;
     }
 
     .negative {
-      color: $blue-text;
+      color: $green-text;
     }
   }
 
@@ -137,7 +139,7 @@
     height: 0; 
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-bottom: 8px solid $red-text;
+    border-bottom: 8px solid $pink-text;
   }
 
   .arrow-down {
@@ -146,11 +148,19 @@
     height: 0; 
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 8px solid $blue-text;
+    border-top: 8px solid $green-text;
   }
   
   svg {
-    // outline: 1px solid #333;
+    .g-bars rect {
+      fill: $purple-light;
+      stroke: #fff;
+      stroke-width: 3px;
+
+      &.dark-purple {
+        fill: $purple;
+      }
+    }
   }
 
   .container-barChart {
@@ -160,9 +170,5 @@
   .axis {
     color: #333;
     font-size: 11px;
-  }
-
-  .g-bars rect {
-    fill: $purple-light;
   }
 </style>
