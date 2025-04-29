@@ -5,11 +5,14 @@
   import { scaleLinear, scaleBand } from 'd3-scale';
   import { format } from 'd3-format';
   import { timeParse, timeFormat } from 'd3-time-format';
+  import { axisBottom } from 'd3-axis';
+  import { timeYear } from 'd3-time';
+  import { range } from 'd3-array';
 
   const currencyFormat = format("($,");
   const percentFormat = format(".2%");
   const parseTime = timeParse('%Y-%m-%d');
-  const monthYearFormat = timeFormat('%b %Y');
+  const monthYearFormat = timeFormat('%B %Y');
   const url = import.meta.env.BASE_URL;
   let data;
 
@@ -20,8 +23,18 @@
 
   $: width = 500;
   $: height = width / 2;
+  const margin = {
+    top: 25,
+    right: 30,
+    bottom: 10,
+    left: 0
+  }
+  $: innerWidth = width - margin.left - margin.right;
+  $: innerHeight = height - margin.top - margin.bottom;
 
-  let maxPrice, dateRange, xScale, yScale, bandWidth, latest, yearAgo, changeYoY
+  let maxPrice, dateRange, yearLabels, yearTicks,
+      xAxis, xScale, yScale, bandWidth,
+      latest, yearAgo, changeYoY;
   $: if(data) {
     maxPrice = Math.max(...data.timeseries.map(d => {
       return d.median_listing_price;
@@ -33,13 +46,16 @@
 
     xScale = scaleBand()
       .domain(dateRange)
-      .range([0, width]);
+      .range([margin.left, innerWidth]);
 
     bandWidth = xScale.bandwidth();
 
     yScale = scaleLinear()
       .domain([0, maxPrice])
-      .range([height, 0]);
+      .range([innerHeight, margin.top]);
+  
+    yearLabels = dateRange.filter(d => d.substring(5, 7) === '07');
+    yearTicks = dateRange.filter(d => d.substring(5, 7) === '01');
 
     latest = data.timeseries[0];
     yearAgo = data.timeseries[11];
@@ -63,22 +79,38 @@
     </div>
   </div>
   <div class="container-barChart" bind:clientWidth={ width } >
-    <svg { width } { height }>
+    <svg { width } { height } >
       <g class="g-bars">
         {#each data.timeseries as d, i}
           <rect
             x={xScale(d.month_date_yyyymm)}
             width={bandWidth}
-            height={height - yScale(d.median_listing_price)}
+            height={innerHeight - yScale(d.median_listing_price)}
             y={yScale(d.median_listing_price)}
             class="{i === 0 ? 'dark-purple' : ''}"
           />
         {/each}
       </g>
-      <g class="x-axis axis">
-
+      <g 
+        class="g-annotations"
+        transform="translate({xScale(latest.month_date_yyyymm) + (bandWidth/2)}, {yScale(latest.median_listing_price)})">
+        <line x1="0" x2="0" y1="0" y2="{-margin.top/2}"/>
+        <text y="{-margin.top / 2}">{ monthYearFormat(parseTime(latest.month_date_yyyymm)) }</text>
+        <text y="{-margin.top}">{ currencyFormat(latest.median_listing_price) }</text>
       </g>
-      <g class="y-axis axis">
+      <g class="x-axis g-axis" transform="translate(0, {innerHeight})">
+        {#each yearLabels as year}
+          <g transform="translate({xScale(year)}, {margin.bottom})">
+            <text>{year.substring(0, 4)}</text>
+          </g>
+        {/each}
+        {#each yearTicks as year}
+          <g transform="translate({xScale(year)}, {margin.bottom})">
+            <line x1="0" x2="0" y1="0" y2="{-margin.bottom}"/>
+          </g>
+        {/each}
+      </g>
+      <g class="y-axis g-axis">
 
       </g>
     </svg>
@@ -86,7 +118,7 @@
 {/if}
 
 <style lang="scss">
-  @import './../lib/style/variables';
+  @use './../lib/style/variables';
 
   .countyName {
     margin-bottom: 10px;
@@ -99,7 +131,7 @@
     margin-bottom: 25px;
 
     .label {
-      color: $gray-light;
+      color: variables.$gray-light;
       font-family: "Lekton", monospace;
       font-size: 14px;
       letter-spacing: 0.5px;
@@ -121,15 +153,15 @@
     }
 
     .currency {
-      color: $purple;
+      color: variables.$purple;
     }
 
     .positive {
-      color: $pink-text;
+      color: variables.$pink-text;
     }
 
     .negative {
-      color: $green-text;
+      color: variables.$green-text;
     }
   }
 
@@ -139,7 +171,7 @@
     height: 0; 
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-bottom: 8px solid $pink-text;
+    border-bottom: 8px solid variables.$pink-text;
   }
 
   .arrow-down {
@@ -148,17 +180,27 @@
     height: 0; 
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 8px solid $green-text;
+    border-top: 8px solid variables.$green-text;
   }
   
   svg {
+    line {
+      stroke: #333;
+      stroke-width: 0.5px;
+    }
+
+    text {
+      font-size: 12px;
+      text-anchor: middle;
+    }
+
     .g-bars rect {
-      fill: $purple-light;
+      fill: variables.$purple-light;
       stroke: #fff;
       stroke-width: 3px;
 
       &.dark-purple {
-        fill: $purple;
+        fill: variables.$purple;
       }
     }
   }
@@ -167,7 +209,7 @@
     max-width: 500px;
   }
 
-  .axis {
+  .g-axis {
     color: #333;
     font-size: 11px;
   }

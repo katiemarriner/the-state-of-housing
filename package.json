@@ -20,8 +20,11 @@
     "vite": "^6.3.1"
   },
   "dependencies": {
+    "d3-array": "^3.2.4",
+    "d3-axis": "^3.0.0",
     "d3-format": "^3.1.0",
     "d3-scale": "^4.0.2",
+    "d3-time": "^3.1.0",
     "d3-time-format": "^4.1.0",
     "regexparam": "^3.0.0",
     "svelte-preprocess": "^6.0.3",
