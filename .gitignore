@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-tasks/RDC_Inventory_Core_Metrics_County_History.csv
+tasks/data/*
 
 # Editor directories and files
 .vscode/
