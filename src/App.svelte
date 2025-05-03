@@ -12,7 +12,7 @@
 </main>
 
 <style lang="scss">
-  @import './lib/style/variables';
+  @use './lib/style/variables';
 
   a {
     color: #333;
