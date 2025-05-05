@@ -5,9 +5,6 @@
   import { scaleLinear, scaleBand } from 'd3-scale';
   import { format } from 'd3-format';
   import { timeParse, timeFormat } from 'd3-time-format';
-  import { axisBottom } from 'd3-axis';
-  import { timeYear } from 'd3-time';
-  import { range } from 'd3-array';
 
   const currencyFormat = format("($,");
   const percentFormat = format(".2%");
@@ -15,6 +12,7 @@
   const monthYearFormat = timeFormat('%B %Y');
   const url = import.meta.env.BASE_URL;
   let data;
+  let metricKey = 'median_listing_price';
 
   onMount(async () => {
     const res = await fetch(`${url}/data/counties/${params.id}.json`);
@@ -36,12 +34,12 @@
       xAxis, xScale, yScale, bandWidth,
       latest, yearAgo, changeYoY;
   $: if(data) {
-    maxPrice = Math.max(...data.timeseries.map(d => {
-      return d.median_listing_price;
+    maxPrice = Math.max(...data[metricKey].map(d => {
+      return d[1];
     }));
   
-    dateRange = data.timeseries.map(d => {
-      return d.month_date_yyyymm;
+    dateRange = data[metricKey].map(d => {
+      return d[0];
     }).reverse();
 
     xScale = scaleBand()
@@ -57,9 +55,12 @@
     yearLabels = dateRange.filter(d => d.substring(5, 7) === '07');
     yearTicks = dateRange.filter(d => d.substring(5, 7) === '01');
 
-    latest = data.timeseries[0];
-    yearAgo = data.timeseries[11];
-    changeYoY = (latest.median_listing_price - yearAgo.median_listing_price) / latest.median_listing_price;
+    latest = data[metricKey][0];
+    yearAgo = data[metricKey][11];
+    changeYoY = (latest[1] - yearAgo[1]) / latest[1];
+
+    console.log(maxPrice, latest)
+
   }
   </script>
 
@@ -67,8 +68,8 @@
   <h1 class="countyName">{data.county_name}</h1>
   <div class="container-bigNumbers" style="width:{width}px;">
     <div class="container-label">
-      <div class="bigNumber currency">{currencyFormat(latest.median_listing_price)}</div>
-      <div class="label">Median home price {monthYearFormat(parseTime(latest.month_date_yyyymm))}</div>
+      <div class="bigNumber currency">{currencyFormat(latest[1])}</div>
+      <div class="label">Median home price {monthYearFormat(parseTime(latest[0]))}</div>
     </div>
     <div class="container-label">
       <div class="mediumNumber change {changeYoY > 0 ? 'positive' : changeYoY < 0 ? 'negative' : 'zero'}">
@@ -81,22 +82,22 @@
   <div class="container-barChart" bind:clientWidth={ width } >
     <svg { width } { height } >
       <g class="g-bars">
-        {#each data.timeseries as d, i}
+        {#each data[metricKey] as d, i}
           <rect
-            x={xScale(d.month_date_yyyymm)}
+            x={xScale(d[0])}
             width={bandWidth}
-            height={innerHeight - yScale(d.median_listing_price)}
-            y={yScale(d.median_listing_price)}
+            height={innerHeight - yScale(d[1])}
+            y={yScale(d[1])}
             class="{i === 0 ? 'dark-purple' : ''}"
           />
         {/each}
       </g>
       <g 
         class="g-annotations"
-        transform="translate({xScale(latest.month_date_yyyymm) + (bandWidth/2)}, {yScale(latest.median_listing_price)})">
+        transform="translate({xScale(latest[0]) + (bandWidth/2)}, {yScale(latest[1])})">
         <line x1="0" x2="0" y1="0" y2="{-margin.top/2}"/>
-        <text y="{-margin.top / 2}">{ monthYearFormat(parseTime(latest.month_date_yyyymm)) }</text>
-        <text y="{-margin.top}">{ currencyFormat(latest.median_listing_price) }</text>
+        <text y="{-margin.top / 2}">{ monthYearFormat(parseTime(latest[0])) }</text>
+        <text y="{-margin.top}">{ currencyFormat(latest[1]) }</text>
       </g>
       <g class="x-axis g-axis" transform="translate(0, {innerHeight})">
         {#each yearLabels as year}

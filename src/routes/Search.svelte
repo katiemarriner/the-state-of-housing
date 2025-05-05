@@ -1,5 +1,5 @@
 <script>
-  import countiesData from  '../counties.store.js';
+  export let countiesMeta;
 
   $: width = 500;
 
@@ -12,7 +12,7 @@
   }
   
   let counties
-  countiesData.subscribe(items => counties = items);
+  countiesMeta.subscribe(items => counties = items);
   
   let inputValue;
   let filteredCounties;
