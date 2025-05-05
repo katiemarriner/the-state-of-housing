@@ -4,10 +4,11 @@ An interactive dashboard that shows median home prices, inventory and sales over
 
 ## T/k
 - [X] Working search bar
+- [ ] Reconcile new Connecticut county-equivalents to counties
 - [ ] 12-month moving average for median home prices
 - [ ] Comparison with national average metrics
 - [ ] Chart for inventory (YoY with 12-month moving average)
-- [ ] Chart for home sales (YoY with 12-month moving average)
+- [ ] Create a list of most expensive median home prices
 - [ ] Weekly national report (median home prices, inventory, home sales)
 
 ## How to format data
