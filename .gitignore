@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 tasks/data/*
+tasks/.ipynb_checkpoints/
 
 # Editor directories and files
 .vscode/
