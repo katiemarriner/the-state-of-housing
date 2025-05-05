@@ -1,9 +1,7 @@
 <script>
   import Router from 'svelte-spa-router';
   import routes from './routes';
-  import { location } from 'svelte-spa-router'
-  
-  console.log($location);
+  import { location } from 'svelte-spa-router';
 </script>
 
 <nav>

@@ -29,9 +29,7 @@
     bottom: 10,
     left: 0
   }
-
-  console.log('latest', latest)
-  </script>
+</script>
 
 {#if data}
   <div bind:clientWidth={ width } style="max-width:500px;">

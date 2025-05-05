@@ -12,6 +12,10 @@
   $: innerWidth = width - margin.left - margin.right;
   $: innerHeight = height - margin.top - margin.bottom;
   
+  data[metricKey] = data[metricKey].filter(d => {
+    return d[0] > '2019-01-01'
+  });
+
   $: maxPrice = Math.max(...data[metricKey].map(d => {
     return d[1];
   }));
@@ -32,7 +36,6 @@
   
   $: yearLabels = dateRange.filter(d => d.substring(5, 7) === '07');
   $: yearTicks = dateRange.filter(d => d.substring(5, 7) === '01');
-  console.log(latest)
 </script>
 
 {#if xScale}
@@ -51,10 +54,10 @@
       </g>
       <g 
         class="g-annotations"
-        transform="translate({xScale(latest[0]) + (bandWidth/2)}, {yScale(latest[1])})">
-        <line x1="0" x2="0" y1="0" y2="{-margin.top/2}"/>
+        transform="translate({xScale(latest[0]) + (bandWidth/2)}, {margin.top})">
+        <line x1="0" x2="0" y1="0" y2="{ yScale(latest[1]) }"/>
         <text y="{-margin.top / 2}">{ monthYearFormat(parseTime(latest[0])) }</text>
-        <text y="{-margin.top}">{ currencyFormat(latest[1]) }</text>
+        <text y="0">{ currencyFormat(latest[1]) }</text>
       </g>
       <g class="x-axis g-axis" transform="translate(0, {innerHeight})">
         {#each yearLabels as year}
