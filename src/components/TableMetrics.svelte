@@ -23,13 +23,13 @@
     <thead>
       <tr>
         <th class="name">County</th>
-        <th>
+        <th class="num">
           <span>Median home price</span>
           <span class="arrow arrow-down"></span>
         </th>
-        <th>Change year-over-year</th>
-        <th>Inventory</th>
-        <th>change year-over-year</th>
+        <th class="num">Change year-over-year</th>
+        <th class="num">Inventory</th>
+        <th class="num">change year-over-year</th>
       </tr>
     </thead>
     <tbody>
@@ -55,19 +55,40 @@
 <style lang="scss">
   @use './../lib/style/variables';
 
+  table {
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    border-bottom: 1px solid variables.$gray-grid;
+  }
+
   tbody tr {
     cursor: pointer;
+    border-bottom: 0.5px solid variables.$gray-grid;
+
+    &:hover {
+      background: variables.$gray-lightest;
+    }
   }
 
   th, td {
-    // text-align: left;
     max-width: 200px;
     padding: 10px 5px;
   }
 
-  th {
+  th, th span {
     text-transform: uppercase; 
     font-size: 12px;
+    font-weight: 600;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  th.num {
+    text-align: right;
   }
 
   td.name {
@@ -77,10 +98,9 @@
   td {
     font-size: 14px;
     font-family: "Lato", sans-serif;
-    border-bottom: 0.5px solid variables.$gray-grid;
   }
 
-  td.num, th.num {
+  td.num {
     text-align: right;
     font-family: "Lekton", monospace;
   }

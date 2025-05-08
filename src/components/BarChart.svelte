@@ -4,6 +4,7 @@
   import { format } from 'd3-format';
   import { timeParse, timeFormat } from 'd3-time-format';
   import { scaleLinear, scaleBand } from 'd3-scale';
+  import { line } from 'd3-shape';
   
   const currencyFormat = format("($,");
   const parseTime = timeParse('%Y-%m-%d');
@@ -14,6 +15,10 @@
   
   data[metricKey] = data[metricKey].filter(d => {
     return d[0] > '2019-01-01'
+  });
+
+  data[`${metricKey}_rolling`] = data[`${metricKey}_rolling`].filter(d => {
+    return d[0] > '2019-01-01';
   });
 
   $: maxPrice = Math.max(...data[metricKey].map(d => {
@@ -34,6 +39,10 @@
     .domain([0, maxPrice])
     .range([innerHeight, margin.top]);
   
+  $: movingLine = line()
+    .x(d => xScale(d[0]))
+    .y(d =>  yScale(d[1]));
+  
   $: yearLabels = dateRange.filter(d => d.substring(5, 7) === '07');
   $: yearTicks = dateRange.filter(d => d.substring(5, 7) === '01');
 </script>
@@ -51,6 +60,9 @@
             class="{i === 0 ? 'dark-purple' : ''}"
           />
         {/each}
+      </g>
+      <g class="g-line">
+        <path d={movingLine(data[`${metricKey}_rolling`])}/>
       </g>
       <g 
         class="g-annotations"
@@ -102,6 +114,12 @@
       &.dark-purple {
         fill: variables.$purple;
       }
+    }
+
+    .g-line path {
+      stroke-width: 1px;
+      stroke: variables.$purple;
+      fill: none;
     }
   }
 

@@ -16,6 +16,7 @@
   onMount(async () => {
     const res = await fetch(`${url}/data/counties/${params.id}.json`);
     data = await res.json();
+    data[metricKey] = data[metricKey].reverse();
     latest = data[metricKey][0];
     yearAgo = data[metricKey][11];
     changeYoY = (latest[1] - yearAgo[1]) / latest[1];
