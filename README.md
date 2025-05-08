@@ -7,11 +7,14 @@ An interactive dashboard that shows median home prices, inventory and sales over
 - [X] Reconcile new Connecticut county-equivalents to counties
 - [X] 12-month moving average for median home prices
 - [ ] Comparison with national average metrics
+- [ ] Comparison with state-level metrics
+- [ ] Table inside each county page that shows counties in the state and counties with similar populations
 - [X] Chart for inventory (YoY with 12-month moving average)
 - [X] Create a list of most expensive median home prices
-- [ ] Paginate table on the main page and make it sortable
-- [ ] Weekly national report (median home prices, inventory, home sales)
-- [ ] On hover show that month of every year
+- [X] Paginate table on the main page and make it sortable
+- [X] Monthly national report (median home prices, inventory, home sales)
+- [ ] On hover of the bar chart show that month of every year
+- [ ] Weekly report for national-level?
 
 ## How to format data
 1. Download data from [Realtor.com](https://www.realtor.com/research/data/). Monthly inventory -> Historical data -> County. And Weekly inventory -> National (View US Data)
