@@ -40,6 +40,7 @@
 </script>
 
 <div class="container-table">
+  <div class="label">Latest month: April 2025</div>
   <table>
     <thead>
       <tr>
@@ -90,6 +91,14 @@
 
 <style lang="scss">
   @use './../lib/style/variables';
+  
+  .label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    margin: 10px 0;
+    text-transform: uppercase;
+  }
 
   .container-table {
     width: 100%;
@@ -114,6 +123,10 @@
 
   th, td {
     padding: 10px 5px;
+
+    &:first-child {
+      padding-left: 0px;
+    }
   }
 
   th, th span {
@@ -148,7 +161,7 @@
     }
   }
 
-  .currency {
+  .purple {
     color: variables.$purple;
   }
 
@@ -177,6 +190,7 @@
   }
 
   .table-pagination :global(.pagination-nav) {
+    box-shadow: none;
     font-size: 14px;
     justify-content: space-between;
   }

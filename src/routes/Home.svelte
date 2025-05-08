@@ -14,9 +14,8 @@
 </script>
 
 {#if data.length}
-  <p>Latest month: April 2025</p>
   <Search { countiesMeta } />
-  <TableMetrics latestData={ data } maxWidth={ 500 }/>
+  <TableMetrics latestData={ data } />
 {/if}
 
 <style lang="scss">

@@ -57,6 +57,10 @@
 
 {#if xScale}
   <div class="container-barChart">
+    <div class="container-legend">
+      <div class="legend-line line-{color}"></div>
+      <div class="legend-label">12-month moving average</div>
+    </div>
     <svg { width } { height } >
       <g class="g-bars">
         {#each data[metricKey] as d, i}
@@ -100,6 +104,30 @@
 
 <style lang="scss">
   @use './../lib/style/variables';
+
+  .container-legend {
+    display: flex;
+    max-width: 200px;
+    height: 0px;
+    align-items: center;
+
+    .legend-label {
+      font-size: 12px;
+      margin-left: 5px;
+    }
+
+    .legend-line {
+      width: 20px;
+    }
+
+    .line-purple {
+      border-bottom: 2px solid variables.$purple;
+    }
+
+    .line-orange {
+      border-bottom: 2px solid variables.$orange;
+    }
+  }
 
   svg {
     overflow: visible;

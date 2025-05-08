@@ -1,5 +1,5 @@
 <script>
-  export let countiesMeta, widthxz;
+  export let countiesMeta;
 
   const makeMatchBold = (obj, key) => {
 	// replace part of (country name === inputValue) with strong tags
