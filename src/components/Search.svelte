@@ -24,9 +24,7 @@
 		});
 	}
 	filteredCounties = storageArr;
-}	
-
-  $: console.log(filteredCounties);
+}
 </script>
 
 <form autocomplete="off">

@@ -1,5 +1,5 @@
 <script>
-  export let data, metricKey, label, width, formatType, color;
+  export let data, metricKey, label, labelSub, formatType, color;
 
   import { format } from 'd3-format';
   import { timeParse, timeFormat } from 'd3-time-format';
@@ -15,6 +15,7 @@
   const parseTime = timeParse('%Y-%m-%d');
   const monthYearFormat = timeFormat('%B %Y');
 
+  console.log(metricKey)
   data[metricKey].reverse();
 
   $: latest = data[metricKey][0];
@@ -22,11 +23,11 @@
   $: changeYoY = (latest[1] - yearAgo[1]) / latest[1];
 </script>
 
-<h2 class="label">{ label }</h2>
-<div class="container-bigNumbers" style="width:{width}px;">
+<h3 class="label">{ label }</h3>
+<div class="container-bigNumbers">
   <div class="container-label">
     <div class="bigNumber currency {color}">{formats[formatType](latest[1])}</div>
-    <div class="label">{ label } {monthYearFormat(parseTime(latest[0]))}</div>
+    <div class="label">{ labelSub } {monthYearFormat(parseTime(latest[0]))}</div>
   </div>
   <div class="container-label">
     <div class="mediumNumber change {changeYoY > 0 ? 'positive' : changeYoY < 0 ? 'negative' : 'zero'}">
@@ -40,8 +41,8 @@
 <style lang="scss">
   @use './../lib/style/variables';
 
-  .label {
-    margin-bottom: 5px;
+  h3 {
+    margin: 5px 0;
   }
 
   .container-bigNumbers {

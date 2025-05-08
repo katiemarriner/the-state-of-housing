@@ -1,5 +1,5 @@
 <script>
-  export let latestData;
+  export let dataLatest;
 
   import { format } from "d3-format";
   import { push } from "svelte-spa-router";
@@ -13,7 +13,7 @@
 
   $: currentValue = 'median_listing_price';
   $: direction = 'asc';
-  let sortedData = latestData
+  let sortedData = dataLatest
     .filter(d => {
       return d.active_listing_count > 10;
     });
@@ -37,10 +37,44 @@
   let pageSize = 10
   $: paginatedItems = paginate({ items: sortedData, pageSize, currentPage });
 
+  const buttonCountySize = [
+    {
+      label: 'Metro',
+      upper: Infinity,
+      lower: 2500
+    },  
+    {
+      label: 'Large',
+      upper: 2500,
+      lower: 1000
+    },
+    {
+      label: 'Medium',
+      upper: 1000,
+      lower: 500,
+    },
+    {
+      label: 'Small',
+      upper: 500,
+      lower: 100
+    },
+    {
+      label: 'Extra small',
+      upper: 100,
+      lower: 0
+    },
+  ];
 </script>
 
 <div class="container-table">
-  <div class="label">Latest month: April 2025</div>
+  <div class="container-header">
+    <div class="label">Latest month: April 2025</div>
+    <div class="filter-buttons">
+      {#each buttonCountySize as btn}
+
+      {/each}
+    </div>
+  </div>
   <table>
     <thead>
       <tr>
@@ -189,18 +223,18 @@
     border-top: 6px solid variables.$pink-text;
   }
 
-  .table-pagination :global(.pagination-nav) {
+  .table-pagination .pagination-nav {
     box-shadow: none;
     font-size: 14px;
     justify-content: space-between;
   }
 
   .table-pagination :global(.option) {
-    color: variables.$orange;
+    color: variables.$teal-text;
   }
 
   .table-pagination :global(.option.active.number) {
-    color: variables.$orange;
+    color: variables.$teal-text;
     font-weight: 700;
   }
   

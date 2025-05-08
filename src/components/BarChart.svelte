@@ -1,5 +1,5 @@
 <script>
-  export let width, height, margin, data, metricKey, color, formatType;
+  export let width, height, margin, data, metricKey, color, formatType, showAnnotation;
 
   import { format } from 'd3-format';
   import { timeParse, timeFormat } from 'd3-time-format';
@@ -9,17 +9,25 @@
   import XAxis from './XAxis.svelte';
 
   formatType = formatType || 'currency';
+  margin = margin || {
+    top: 25,
+    right: 0,
+    bottom: 15,
+    left: 0
+  };
 
   const formats = {
     currency: format("$,"),
     number: format(",")
-  }
+  };
 
   const parseTime = timeParse('%Y-%m-%d');
   const monthYearFormat = timeFormat('%B %Y');
 
   $: innerWidth = width - margin.left - margin.right;
   $: innerHeight = height - margin.top - margin.bottom;
+
+  console.log(width)
 
   $: latest = data[metricKey][0];
   
@@ -78,13 +86,15 @@
       <g class="g-line" transform="translate({bandWidth / 2}, 0)">
         <path d={movingLine(data[`${metricKey}_rolling`])} class="line-{color}"/>
       </g>
-      <g 
-        class="g-annotations"
-        transform="translate({xScale(latest[0]) + (bandWidth/2)}, {margin.top})">
-        <line x1="0" x2="0" y1="0" y2="{ yScale(latest[1]) }"/>
-        <text y="{-margin.top / 2}">{ monthYearFormat(parseTime(latest[0])) }</text>
-        <text y="0">{ formats[formatType](latest[1]) }</text>
-      </g>
+      {#if showAnnotation}
+        <g 
+          class="g-annotations"
+          transform="translate({xScale(latest[0]) + (bandWidth/2)}, {margin.top})">
+          <line x1="0" x2="0" y1="0" y2="{ yScale(latest[1]) }"/>
+          <text y="{-margin.top / 2}">{ monthYearFormat(parseTime(latest[0])) }</text>
+          <text y="0">{ formats[formatType](latest[1]) }</text>
+        </g>
+      {/if}
       <XAxis xScale={xScale} { yearLabels } { margin } { yearTicks } { innerHeight }/>
       <g class="y-axis g-axis">
 

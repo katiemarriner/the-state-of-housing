@@ -34,7 +34,6 @@
       { data }  
       metricKey='median_listing_price'
       label="Median home price"
-      { width }
       formatType='currency' 
       color='purple'
     />
@@ -46,12 +45,13 @@
       { margin }
       formatType='currency'
       color='purple'
+      showAnnotation={true}
     />
 
     <BigNumbers
       { data }
       metricKey='active_listing_count'
-      label="Inventory" { width }
+      label="Inventory" 
       formatType='number' 
       color='orange'
     />
@@ -63,6 +63,7 @@
       { margin }
       formatType='number'
       color='orange'
+      showAnnotation={true}
     />
   </div>
 {/if}
