@@ -3,6 +3,7 @@
 
   import { format } from "d3-format";
   import { push } from "svelte-spa-router";
+  import { paginate, LightPaginationNav } from 'svelte-paginate'
 
   const percentFormat = format(".2%");
   const currencyFormat = format("$,");
@@ -16,6 +17,10 @@
   }).filter(d => {
     return d.active_listing_count > 10;
   });
+
+  let currentPage = 1
+  let pageSize = 10
+  $: paginatedItems = paginate({ items: sortedData, pageSize, currentPage })
 </script>
 
 <div style="max-width:{maxWidth}px;">
@@ -33,7 +38,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each sortedData as row }
+      {#each paginatedItems as row }
         <tr on:click={() => push(`#/county/${row.county_fips}`)}>
           <td class="name">{ row.county_name }</td>
           <td class="num">{ currencyFormat(row.median_listing_price) }</td>
@@ -50,6 +55,16 @@
       {/each}
     </tbody>
   </table>
+  <div class="table-pagination">
+    <LightPaginationNav
+      totalItems="{sortedData.length}"
+      pageSize="{pageSize}"
+      currentPage="{currentPage}"
+      limit="{1}"
+      showStepOptions="{true}"
+      on:setPage="{(e) => currentPage = e.detail.page}"
+    />
+  </div>
 </div>
 
 <style lang="scss">
@@ -147,5 +162,27 @@
 
   .arrow-down-negative {
     border-top: 6px solid variables.$pink-text;
+  }
+
+  .table-pagination :global(.pagination-nav) {
+    font-size: 14px;
+    justify-content: space-between;
+  }
+  .table-pagination :global(.option) {
+    color: variables.$orange;
+  }
+
+  .table-pagination :global(.option.active.number) {
+    color: variables.$orange;
+    font-weight: 700;
+  }
+  
+  .table-pagination :global(.option.number) {
+    color: variables.$gray;
+  }
+
+  .table-pagination :global(.option.prev),
+  .table-pagination :global(.option.next) {
+    width: 20px;
   }
 </style>
