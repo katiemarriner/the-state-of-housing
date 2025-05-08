@@ -16,6 +16,7 @@
     "indian-ocean": "^4.0.3",
     "sass-embedded": "^1.87.0",
     "svelte": "^5.23.1",
+    "svelte-paginate": "^0.1.0",
     "underscore": "^1.13.7",
     "vite": "^6.3.1"
   },
