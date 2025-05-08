@@ -1,40 +1,61 @@
 <script>
-  export let latestData, maxWidth;
+  export let latestData;
 
   import { format } from "d3-format";
   import { push } from "svelte-spa-router";
   import { paginate, LightPaginationNav } from 'svelte-paginate'
 
+  import SortArrows from "./SortArrows.svelte";
+
   const percentFormat = format(".2%");
   const currencyFormat = format("$,");
   const numberFormat = format(",");
 
-  $: sortValue = 'median_listing_price';
-  $: direction = 'desc';
+  $: currentValue = 'median_listing_price';
+  $: direction = 'asc';
+  let sortedData = latestData
+    .filter(d => {
+      return d.active_listing_count > 10;
+    });
 
-  $: sortedData = latestData.sort((a, b) => {
-    return b[sortValue] - a[sortValue]
-  }).filter(d => {
-    return d.active_listing_count > 10;
-  });
+  function sortData(sortValue) {
+    console.log(sortValue);
+    currentValue = sortValue;
+    direction = direction === 'asc' ? 'desc' : 'asc';
+    sortedData = sortedData.sort((a, b) => {
+      if(direction === 'desc') {
+        return a[sortValue] - b[sortValue]
+      } else {
+        return b[sortValue] - a[sortValue]
+      }
+    });
+    console.log(sortedData)
+  }
 
+  sortData('median_listing_price')
   let currentPage = 1
   let pageSize = 10
-  $: paginatedItems = paginate({ items: sortedData, pageSize, currentPage })
+  $: paginatedItems = paginate({ items: sortedData, pageSize, currentPage });
+
 </script>
 
-<div style="max-width:{maxWidth}px;">
+<div class="container-table">
   <table>
     <thead>
       <tr>
-        <th class="name">County</th>
-        <th class="num">
-          <span>Median home price</span>
-          <span class="arrow arrow-down"></span>
+        <th class="name" on:click={() => sortData('county_name')}>County</th>
+        <th class="num" on:click={() => sortData('median_listing_price')}>
+          <SortArrows label='Median home price' active={currentValue === 'median_listing_price'} { direction } />
         </th>
-        <th class="num">Change year-over-year</th>
-        <th class="num">Inventory</th>
-        <th class="num">change year-over-year</th>
+        <th class="num" on:click={() => sortData('median_listing_price_yoy')}>
+          <SortArrows label='Change year-over-year' active={currentValue === 'median_listing_price_yoy'} { direction } />
+        </th>
+        <th class="num" on:click={() => sortData('active_listing_count')}>
+          <SortArrows label='Inventory' active={currentValue === 'active_listing_count'} { direction } />
+        </th>
+        <th class="num" on:click={() => sortData('active_listing_yoy')}>
+          <SortArrows label='Change year-over-year' active={currentValue === 'active_listing_yoy'} { direction } />
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -70,6 +91,10 @@
 <style lang="scss">
   @use './../lib/style/variables';
 
+  .container-table {
+    width: 100%;
+  }
+
   table {
     border-collapse: collapse;
   }
@@ -88,7 +113,6 @@
   }
 
   th, td {
-    max-width: 200px;
     padding: 10px 5px;
   }
 
@@ -99,25 +123,29 @@
   }
 
   th {
+    cursor: pointer;
     text-align: left;
-  }
+    width: 150px;
 
-  th.num {
-    text-align: right;
-  }
-
-  td.name {
-    color: variables.$gray-dark;
+    &.num {
+      text-align: right;
+      width: initial;
+    }
   }
 
   td {
     font-size: 14px;
     font-family: "Lato", sans-serif;
-  }
 
-  td.num {
-    text-align: right;
-    font-family: "Lekton", monospace;
+    &.name {
+      color: variables.$gray-dark;
+    }
+
+    &.num {
+      text-align: right;
+      font-family: "Lekton", monospace;
+      min-width: 100px;
+    }
   }
 
   .currency {
@@ -130,22 +158,6 @@
 
   .pink {
     color: variables.$pink-text;
-  }
-
-  .arrow {
-    display: inline-block;
-    width: 0; 
-    height: 0; 
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-  }
-
-  .arrow-up {
-    border-bottom: 6px solid variables.$gray-grid;
-  }
-
-  .arrow-down {
-    border-top: 6px solid variables.$gray-grid;
   }
 
   .arrow-up-negative {
@@ -168,6 +180,7 @@
     font-size: 14px;
     justify-content: space-between;
   }
+
   .table-pagination :global(.option) {
     color: variables.$orange;
   }

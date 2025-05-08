@@ -1,7 +1,5 @@
 <script>
-  export let countiesMeta;
-
-  $: width = 500;
+  export let countiesMeta, widthxz;
 
   const makeMatchBold = (obj, key) => {
 	// replace part of (country name === inputValue) with strong tags
@@ -32,11 +30,11 @@
 </script>
 
 <form autocomplete="off">
-  <div class="autocomplete" style="width:{width}px;">
+  <div class="autocomplete">
     <input id="county-search-input" type="text" name="county-search" bind:value={inputValue} placeholder="Search for a county" on:input={filterCounties}>
   </div>
 </form>
-<ul id="autocomplete-items-list" style="width:{width}px;">
+<ul id="autocomplete-items-list">
   {#each filteredCounties as county}
     <a href="#/county/{county.county_fips}"><li class="autocomplete-items">{@html county.county_name}</li></a>
   {/each}
@@ -58,6 +56,7 @@
     position: relative;
     display: inline-block;
     z-index: 1;
+    width: 100%;
 
     &:focus-visible, &:active, &:focus {
       border: 1px solid variables.$teal;
@@ -81,6 +80,7 @@
     border-right: 1px solid variables.$teal;
     border-left: 1px solid variables.$teal;
     background-color: variables.$gray-lightest;
+    width: 100%;
   }
 
   input[type=text] {

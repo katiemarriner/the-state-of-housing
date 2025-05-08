@@ -23,6 +23,8 @@
     bottom: 10,
     left: 0
   }
+
+  $: console.log(width)
 </script>
 
 {#if data}
