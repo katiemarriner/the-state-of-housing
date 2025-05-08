@@ -69,7 +69,7 @@
           />
         {/each}
       </g>
-      <g class="g-line">
+      <g class="g-line" transform="translate({bandWidth / 2}, 0)">
         <path d={movingLine(data[`${metricKey}_rolling`])} class="line-{color}"/>
       </g>
       <g 
