@@ -3,23 +3,16 @@
 
   import BigNumbers from '../components/BigNumbers.svelte';
   import BarChart from '../components/BarChart.svelte';
+  import LineChart from '../components/LineChart.svelte';
 
-  import { onMount } from 'svelte';
+  import { onMount } from 'svelte'; 
   
   const url = import.meta.env.BASE_URL;
   let data;
-  let latest = 0;
-  let yearAgo = 0;
-  let changeYoY = 0;
-  let metricKey = 'median_listing_price';
 
   onMount(async () => {
     const res = await fetch(`${url}/data/counties/${params.id}.json`);
     data = await res.json();
-    data[metricKey] = data[metricKey].reverse();
-    latest = data[metricKey][0];
-    yearAgo = data[metricKey][11];
-    changeYoY = (latest[1] - yearAgo[1]) / latest[1];
   });
 
   $: width = 500;
@@ -35,8 +28,40 @@
 {#if data}
   <div bind:clientWidth={ width } style="max-width:500px;">
     <h1 class="countyName">{data.county_name}</h1>
-    <BigNumbers { width } { latest } { changeYoY } label="Prices" />
-    <BarChart { width } { height } { margin } { data } { metricKey } { latest }/>
+    <BigNumbers
+      { data }  
+      metricKey='median_listing_price'
+      label="Median home price"
+      { width }
+      formatType='currency' 
+      color='purple'
+    />
+    <BarChart
+      { data }
+      metricKey='median_listing_price'
+      { width }
+      { height }
+      { margin }
+      formatType='currency'
+      color='purple'
+    />
+
+    <BigNumbers
+      { data }
+      metricKey='active_listing_count'
+      label="Inventory" { width }
+      formatType='number' 
+      color='orange'
+    />
+    <BarChart
+      { data }
+      metricKey='active_listing_count'
+      { width }
+      { height }
+      { margin }
+      formatType='number'
+      color='orange'
+    />
   </div>
 {/if}
 

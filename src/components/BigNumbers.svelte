@@ -1,25 +1,37 @@
 <script>
-  export let width, latest, changeYoY, label;
+  export let data, metricKey, label, width, formatType, color;
 
   import { format } from 'd3-format';
   import { timeParse, timeFormat } from 'd3-time-format';
 
-  const percentFormat = format(".2%");
-  const currencyFormat = format("($,");
+  formatType = formatType || 'currency';
+
+  const formats = {
+    currency: format("$,"),
+    number: format(","),
+    percent: format(".2%")
+  }
+
   const parseTime = timeParse('%Y-%m-%d');
   const monthYearFormat = timeFormat('%B %Y');
+
+  data[metricKey].reverse();
+
+  $: latest = data[metricKey][0];
+  $: yearAgo = data[metricKey][11];
+  $: changeYoY = (latest[1] - yearAgo[1]) / latest[1];
 </script>
 
 <h2 class="label">{ label }</h2>
 <div class="container-bigNumbers" style="width:{width}px;">
   <div class="container-label">
-    <div class="bigNumber currency">{currencyFormat(latest[1])}</div>
-    <div class="label">Median home price {monthYearFormat(parseTime(latest[0]))}</div>
+    <div class="bigNumber currency {color}">{formats[formatType](latest[1])}</div>
+    <div class="label">{ label } {monthYearFormat(parseTime(latest[0]))}</div>
   </div>
   <div class="container-label">
     <div class="mediumNumber change {changeYoY > 0 ? 'positive' : changeYoY < 0 ? 'negative' : 'zero'}">
       <span class="{changeYoY > 0 ? 'arrow-up' : changeYoY < 0 ? 'arrow-down' : ''}"></span>
-      { percentFormat(Math.abs(changeYoY)) }
+      { formats.percent(Math.abs(changeYoY)) }
     </div>
     <div class="label">From previous year</div>
   </div>
@@ -60,8 +72,12 @@
       font-weight: 600;
     }
 
-    .currency {
+    .purple {
       color: variables.$purple;
+    }
+
+    .orange {
+      color: variables.$orange;
     }
 
     .positive {

@@ -1,17 +1,25 @@
 <script>
-  export let width, height, margin, data, metricKey, latest;
+  export let width, height, margin, data, metricKey, color, formatType;
 
   import { format } from 'd3-format';
   import { timeParse, timeFormat } from 'd3-time-format';
   import { scaleLinear, scaleBand } from 'd3-scale';
   import { line } from 'd3-shape';
   
-  const currencyFormat = format("($,");
+  formatType = formatType || 'currency';
+
+  const formats = {
+    currency: format("$,"),
+    number: format(",")
+  }
+
   const parseTime = timeParse('%Y-%m-%d');
   const monthYearFormat = timeFormat('%B %Y');
 
   $: innerWidth = width - margin.left - margin.right;
   $: innerHeight = height - margin.top - margin.bottom;
+
+  $: latest = data[metricKey][0];
   
   data[metricKey] = data[metricKey].filter(d => {
     return d[0] > '2019-01-01'
@@ -57,19 +65,19 @@
             width={bandWidth}
             height={innerHeight - yScale(d[1])}
             y={yScale(d[1])}
-            class="{i === 0 ? 'dark-purple' : ''}"
+            class="{i === 0 ? `dark-${color}` : color }"
           />
         {/each}
       </g>
       <g class="g-line">
-        <path d={movingLine(data[`${metricKey}_rolling`])}/>
+        <path d={movingLine(data[`${metricKey}_rolling`])} class="line-{color}"/>
       </g>
       <g 
         class="g-annotations"
         transform="translate({xScale(latest[0]) + (bandWidth/2)}, {margin.top})">
         <line x1="0" x2="0" y1="0" y2="{ yScale(latest[1]) }"/>
         <text y="{-margin.top / 2}">{ monthYearFormat(parseTime(latest[0])) }</text>
-        <text y="0">{ currencyFormat(latest[1]) }</text>
+        <text y="0">{ formats[formatType](latest[1]) }</text>
       </g>
       <g class="x-axis g-axis" transform="translate(0, {innerHeight})">
         {#each yearLabels as year}
@@ -107,19 +115,37 @@
     }
 
     .g-bars rect {
-      fill: variables.$purple-light;
       stroke: #fff;
       stroke-width: 3px;
 
+      &.purple {
+        fill: variables.$purple-light;
+      }
+
+      &.orange {
+        fill: variables.$orange-light;
+      }
+
       &.dark-purple {
         fill: variables.$purple;
+      }
+
+      &.dark-orange {
+        fill: variables.$orange;
       }
     }
 
     .g-line path {
       stroke-width: 1px;
-      stroke: variables.$purple;
       fill: none;
+
+      &.line-purple {
+        stroke: variables.$purple;
+      }
+
+      &.line-orange {
+        stroke: variables.$orange;
+      }
     }
   }
 
