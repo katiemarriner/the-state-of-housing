@@ -6,6 +6,8 @@
   import { scaleLinear, scaleBand } from 'd3-scale';
   import { line } from 'd3-shape';
   
+  import XAxis from './XAxis.svelte';
+
   formatType = formatType || 'currency';
 
   const formats = {
@@ -83,18 +85,7 @@
         <text y="{-margin.top / 2}">{ monthYearFormat(parseTime(latest[0])) }</text>
         <text y="0">{ formats[formatType](latest[1]) }</text>
       </g>
-      <g class="x-axis g-axis" transform="translate(0, {innerHeight})">
-        {#each yearLabels as year}
-          <g transform="translate({xScale(year)}, {margin.bottom})">
-            <text>{year.substring(0, 4)}</text>
-          </g>
-        {/each}
-        {#each yearTicks as year}
-          <g transform="translate({xScale(year)}, {margin.bottom})">
-            <line x1="0" x2="0" y1="0" y2="{-margin.bottom}"/>
-          </g>
-        {/each}
-      </g>
+      <XAxis xScale={xScale} { yearLabels } { margin } { yearTicks } { innerHeight }/>
       <g class="y-axis g-axis">
 
       </g>
@@ -179,10 +170,5 @@
 
   .container-barChart {
     max-width: 500px;
-  }
-
-  .g-axis {
-    color: #333;
-    font-size: 11px;
   }
 </style>
