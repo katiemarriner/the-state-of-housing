@@ -3,7 +3,7 @@
 An interactive dashboard that shows median home prices, inventory and sales over time by county.
 
 ## T/k
-- [ ] Mobile view of the table
+- [X] Mobile view of the table
 - [ ] Comparison with national average metrics on county pages
 - [ ] Comparison with state-level metrics
 - [ ] On hover of the bar chart show that month of every year
