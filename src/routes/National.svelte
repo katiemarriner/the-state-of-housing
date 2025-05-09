@@ -2,8 +2,8 @@
   import { onMount } from 'svelte';
   import countiesMeta from  '../counties.store.js';
 
-  import Search from "./../components/Search.svelte";
-  import TableMetrics from './../components/TableMetrics.svelte';
+  import Search from "../components/Search.svelte";
+  import TableMetrics from '../components/TableMetrics.svelte';
   import BigNumbers from '../components/BigNumbers.svelte';
   import BarChart from '../components/BarChart.svelte';
     import ExplanationText from '../components/ExplanationText.svelte';
@@ -37,15 +37,16 @@
         labelSub=""
         formatType="currency"
         color="purple"
+        positiveValue="negative"
         />
       <BarChart
         data={ dataNational }
-        metricKey='median_listing_price'
+        metricKey="median_listing_price"
         { width }
         { height }
         margin={ null }
-        formatType='currency'
-        color='purple'
+        formatType="currency"
+        color="purple"
         showAnnotation={false}
       />
     </div>
@@ -56,15 +57,17 @@
         label="Inventory"
         labelSub="Active listings for"
         formatType="number"
-        color="orange"/>
+        color="orange"
+        positiveValue="positive"
+        />
       <BarChart
         data={ dataNational }
-        metricKey='active_listing_count'
+        metricKey="active_listing_count"
         { width }
         { height }
         margin={ null }
-        formatType='number'
-        color='orange'
+        formatType="number"
+        color="orange"
         showAnnotation={false}
       />
     </div>

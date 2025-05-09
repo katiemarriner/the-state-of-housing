@@ -1,7 +1,5 @@
 <script>
   export let xScale, yearLabels, margin, yearTicks, innerHeight;
-
-  console.log(xScale, yearLabels, yearTicks, xScale('2024-01-01'))
 </script>
 
 <g class="x-axis g-axis" transform="translate(0, {innerHeight})">

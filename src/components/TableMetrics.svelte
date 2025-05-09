@@ -1,15 +1,13 @@
 <script>
   export let dataLatest;
 
-  import { format } from "d3-format";
-  import { push } from "svelte-spa-router";
-  import { paginate, LightPaginationNav } from 'svelte-paginate'
+  import { push } from 'svelte-spa-router';
+  import { paginate, LightPaginationNav } from 'svelte-paginate';
 
+  import helpers from './../lib/js/helpers';
   import SortArrows from "./SortArrows.svelte";
 
-  const percentFormat = format(".2%");
-  const currencyFormat = format("$,");
-  const numberFormat = format(",");
+  const formats = helpers.formats;
 
   $: currentValue = 'median_listing_price';
   $: direction = 'asc';
@@ -96,15 +94,15 @@
       {#each paginatedItems as row }
         <tr on:click={() => push(`#/county/${row.county_fips}`)}>
           <td class="name">{ row.county_name }</td>
-          <td class="num">{ currencyFormat(row.median_listing_price) }</td>
+          <td class="num">{ formats.currency(row.median_listing_price) }</td>
           <td class="num {row.median_listing_price_yoy > 0 ? 'pink' : row.median_listing_price_yoy < 0 ? 'green' : ''}">
             <span class="arrow {row.median_listing_price_yoy > 0 ? 'arrow-up-negative' : row.median_listing_price_yoy < 0 ? 'arrow-down-positive' : ''}"></span>
-            { percentFormat(Math.abs(row.median_listing_price_yoy)) }
+            { formats.percent(Math.abs(row.median_listing_price_yoy)) }
           </td>
-          <td class="num">{ numberFormat(row.active_listing_count) }</td>
+          <td class="num">{ formats.number(row.active_listing_count) }</td>
           <td class="num {row.active_listing_count_yoy > 0 ? 'green' : row.active_listing_count_yoy < 0 ? 'pink' : ''}">
             <span class="arrow {row.active_listing_count_yoy > 0 ? 'arrow-up-positive' : row.active_listing_count_yoy < 0 ? 'arrow-down-negative' : ''}"></span>
-            { percentFormat(Math.abs(row.active_listing_count_yoy)) }
+            { formats.percent(Math.abs(row.active_listing_count_yoy)) }
           </td>
         </tr>
       {/each}

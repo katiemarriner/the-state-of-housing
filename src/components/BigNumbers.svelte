@@ -1,19 +1,15 @@
 <script>
-  export let data, metricKey, label, labelSub, formatType, color;
+  export let data, metricKey, label, labelSub, formatType, color, positiveValue, negativeValue;
 
-  import { format } from 'd3-format';
-  import { timeParse, timeFormat } from 'd3-time-format';
+  import helpers from './../lib/js/helpers';
 
   formatType = formatType || 'currency';
+  positiveValue = positiveValue || 'positive';
+  negativeValue = negativeValue || 'negative';
 
-  const formats = {
-    currency: format("$,"),
-    number: format(","),
-    percent: format(".2%")
-  }
-
-  const parseTime = timeParse('%Y-%m-%d');
-  const monthYearFormat = timeFormat('%B %Y');
+  const formats = helpers.formats;
+  const parseTime = helpers.time.parseTime;
+  const monthYearFormat = helpers.time.monthYearFormat;
 
   data[metricKey].reverse();
 
@@ -29,7 +25,7 @@
     <div class="label">{ labelSub } {monthYearFormat(parseTime(latestDate))}</div>
   </div>
   <div class="container-label">
-    <div class="mediumNumber change {changeYoY > 0 ? '' : changeYoY < 0 ? '' : ''}">
+    <div class="mediumNumber change {changeYoY > 0 ? positiveValue : changeYoY < 0 ? negativeValue : ''}">
       <span class="{changeYoY > 0 ? 'arrow-up' : changeYoY < 0 ? 'arrow-down' : ''}"></span>
       { formats.percent(Math.abs(changeYoY)) }
     </div>
@@ -80,11 +76,11 @@
       color: variables.$orange;
     }
 
-    .positive {
+    .negative {
       color: variables.$pink-text;
     }
 
-    .negative {
+    .positive {
       color: variables.$green-text;
     }
   }
@@ -95,7 +91,11 @@
     height: 0; 
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-bottom: 8px solid variables.$gray-darkest;
+    border-bottom: 8px solid variables.$green;
+  }
+
+  .negative > .arrow-up {
+    border-bottom: 8px solid variables.$pink;
   }
 
   .arrow-down {
@@ -104,6 +104,10 @@
     height: 0; 
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 8px solid variables.$gray-darkest;
+    border-top: 8px solid variables.$green;
+  }
+
+  .positive > .arrow-down {
+    border-top: 8px solid variables.$pink;
   }
 </style>
