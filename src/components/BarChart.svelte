@@ -27,8 +27,6 @@
   $: innerWidth = width - margin.left - margin.right;
   $: innerHeight = height - margin.top - margin.bottom;
 
-  console.log(width)
-
   $: latest = data[metricKey][0];
   
   data[metricKey] = data[metricKey].filter(d => {

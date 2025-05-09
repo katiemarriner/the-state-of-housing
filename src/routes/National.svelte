@@ -38,6 +38,7 @@
         formatType="currency"
         color="purple"
         positiveValue="negative"
+        negativeValue="positive"
         />
       <BarChart
         data={ dataNational }
@@ -59,6 +60,7 @@
         formatType="number"
         color="orange"
         positiveValue="positive"
+        negativeValue="negative"
         />
       <BarChart
         data={ dataNational }

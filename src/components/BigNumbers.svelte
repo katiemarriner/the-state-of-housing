@@ -104,10 +104,10 @@
     height: 0; 
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 8px solid variables.$green;
+    border-top: 8px solid variables.$pink;
   }
 
   .positive > .arrow-down {
-    border-top: 8px solid variables.$pink;
+    border-top: 8px solid variables.$green;
   }
 </style>

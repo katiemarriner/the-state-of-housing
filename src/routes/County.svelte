@@ -30,37 +30,43 @@
     <h2 class="countyName">{data.county_name}</h2>
     <BigNumbers
       { data }  
-      metricKey='median_listing_price'
+      metricKey="median_listing_price"
       label="Median home price"
-      formatType='currency' 
-      color='purple'
+      labelSub=""
+      formatType="currency" 
+      color="purple"
+      positiveValue="negative"
+      negativeValue="positive"
     />
     <BarChart
       { data }
-      metricKey='median_listing_price'
+      metricKey="median_listing_price"
       { width }
       { height }
       { margin }
-      formatType='currency'
-      color='purple'
+      formatType="currency"
+      color="purple"
       showAnnotation={true}
     />
 
     <BigNumbers
       { data }
-      metricKey='active_listing_count'
-      label="Inventory" 
-      formatType='number' 
-      color='orange'
+      metricKey="active_listing_count"
+      label="Inventory"
+      labelSub=""
+      formatType="number" 
+      color="orange"
+      positiveValue="positive"
+      negativeValue="negative"
     />
     <BarChart
       { data }
-      metricKey='active_listing_count'
+      metricKey="active_listing_count"
       { width }
       { height }
       { margin }
-      formatType='number'
-      color='orange'
+      formatType="number"
+      color="orange"
       showAnnotation={true}
     />
   </div>
