@@ -74,9 +74,10 @@
     margin: 0;
     padding: 0;
     top: 0;
-    width: 297px;
-    border-right: 1px solid variables.$teal;
-    border-left: 1px solid variables.$teal;
+    max-height: 250px;
+    overflow-y: scroll; 
+    border: 1px solid variables.$teal;
+    border-top: none;
     background-color: variables.$gray-lightest;
     width: 100%;
   }

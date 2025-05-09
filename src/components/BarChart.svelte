@@ -165,7 +165,7 @@
     }
 
     .g-line path {
-      stroke-width: 1px;
+      stroke-width: 2px;
       fill: none;
 
       &.line-purple {

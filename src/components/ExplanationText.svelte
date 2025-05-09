@@ -13,9 +13,9 @@
   }
 
   function upOrDown(key) {
-    return data.latest[`${key}_yoy`] > 0 ? 'increase in' 
+    return data.latest[`${key}_yoy`] > 0 ? 'an increase in' 
       : data.latest[`${key}_yoy`] < 0
-      ? 'decrease in'
+      ? 'a decrease in'
       : 'the same'
   }
   
@@ -27,8 +27,8 @@
 
 </script>
 
-<p>The national housing market shows { changeMedianListing } the median home price year-over-year. The latest month shows a median listing price of <span class="purple">{ currency(data.latest['median_listing_price'] )}</span>, which is { diffMedianListing } the 12-month moving average, <span class="purple">{ currency(data.latest['median_listing_price_rolling']) }</span>.</p>
-<p>As for housing supply, the amount of active listings for { monthYearFormat(parseTime(data.latest['month_date'])) } is { diffActiveListings } the 12-month rolling average for the same month. It's a <span class="{data.latest['active_listing_count_yoy'] > 0 ? 'green' : 'pink'}">{ percent(data.latest['active_listing_count_yoy']) }</span> { changeActiveListings } inventory from one year ago.</p>
+<p>The national housing market shows { changeMedianListing } the <span class="purple">median listing price</span> of homes year-over-year. The latest month's median is <span class="purple">{ currency(data.latest['median_listing_price'] )}</span>, which is { diffMedianListing } the 12-month moving average, <span class="purple">{ currency(data.latest['median_listing_price_rolling']) }</span>.</p>
+<p>As for housing supply, the amount of <span class="orange">active listings</span> for { monthYearFormat(parseTime(data.latest['month_date'])) } is { diffActiveListings } the 12-month rolling average for the same month. It's { changeActiveListings } of <span class="{data.latest['active_listing_count_yoy'] > 0 ? 'green' : 'pink'}">{ percent(data.latest['active_listing_count_yoy']) }</span> from one year ago.</p>
 
 <style lang="scss">
   @use './../lib/style/variables';

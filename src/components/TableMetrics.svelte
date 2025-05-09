@@ -15,11 +15,14 @@
     .filter(d => {
       return d.active_listing_count > 10;
     });
+  
+  let selectedData = sortedData;
+  let selectedSize = '';
 
   function sortData(sortValue) {
     currentValue = sortValue;
     direction = direction === 'asc' ? 'desc' : 'asc';
-    sortedData = sortedData.sort((a, b) => {
+    selectedData = selectedData.sort((a, b) => {
       if(direction === 'desc') {
         return a[sortValue] - b[sortValue]
       } else {
@@ -28,35 +31,53 @@
     });
   }
 
+  function filterCounties({ upper, lower, key }) {
+    // reset if the active button is clicked on;
+    if(selectedSize === key) {
+      selectedData = sortedData;  
+      selectedSize = '';
+    } else {
+      selectedSize = key;
+      selectedData = sortedData.filter(d => {
+        return d['population_2024'] >= lower && d['population_2024'] < upper;
+      });
+    }
+  }
+
   sortData('median_listing_price')
   let currentPage = 1
   let pageSize = 10
-  $: paginatedItems = paginate({ items: sortedData, pageSize, currentPage });
+  $: paginatedItems = paginate({ items: selectedData, pageSize, currentPage });
 
   const buttonCountySize = [
     {
       label: 'Metro',
+      key: 'metro',
       upper: Infinity,
       lower: 500000
     },  
     {
       label: 'Large',
+      key: 'large',
       upper: 500000,
-      lower: 250000
+      lower: 100000
     },
     {
       label: 'Medium',
-      upper: 250000,
-      lower: 100000,
+      key: 'medium',
+      upper: 100000,
+      lower: 25000,
     },
     {
       label: 'Small',
-      upper: 100000,
-      lower: 50000
+      key: 'small',
+      upper: 25000,
+      lower: 10000
     },
     {
       label: 'Extra small',
-      upper: 50000,
+      key: 'extra',
+      upper: 10000,
       lower: 0
     },
   ];
@@ -66,9 +87,15 @@
   <div class="container-header">
     <div class="label">Latest month: April 2025</div>
     <div class="buttons-filter">
-      <div class="label">Filter by county size (t/k)</div>
+      <div class="label">Filter by county size</div>
       {#each buttonCountySize as btn, i}
-        <button class="button-filter {i === 0 ? 'button-filter-first' : ''}">{btn.label}</button>
+        <button
+          data-upper={btn.upper}
+          data-lower={btn.lower}
+          class="button-filter {i === 0 ? 'button-filter-first' : ''} { selectedSize === btn.key ? 'active' : ''}"
+          on:click={ (e) => filterCounties(btn) }>
+            {btn.label}
+        </button>
       {/each}
     </div>
   </div>
@@ -110,7 +137,7 @@
   </table>
   <div class="table-pagination">
     <LightPaginationNav
-      totalItems="{sortedData.length}"
+      totalItems="{selectedData.length}"
       pageSize="{pageSize}"
       currentPage="{currentPage}"
       limit="{1}"
@@ -134,6 +161,10 @@
   .button-filter {
     border-left: none;
     padding: 5px 10px;
+
+    &.active {
+      background-color: variables.$teal-light;
+    }
   }
 
   .button-filter-first {
