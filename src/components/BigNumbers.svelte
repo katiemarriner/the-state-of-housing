@@ -15,7 +15,6 @@
   const parseTime = timeParse('%Y-%m-%d');
   const monthYearFormat = timeFormat('%B %Y');
 
-  console.log(metricKey)
   data[metricKey].reverse();
 
   $: latest = data[metricKey][0];
@@ -23,7 +22,7 @@
   $: changeYoY = (latest[1] - yearAgo[1]) / latest[1];
 </script>
 
-<h3 class="label">{ label }</h3>
+<h3>{ label }</h3>
 <div class="container-bigNumbers">
   <div class="container-label">
     <div class="bigNumber currency {color}">{formats[formatType](latest[1])}</div>

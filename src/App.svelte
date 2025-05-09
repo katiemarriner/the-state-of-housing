@@ -35,22 +35,6 @@
     margin: auto
   }
 
-  a button {
-    color: #333;
-    cursor: pointer;
-    font-family: "Lekton" monospace;
-    text-decoration: none;
-  }
-  
-  button {
-    background-color: #fff;
-    border-radius: 0;
-    border: 1px solid #333;
-    box-shadow: none;
-    cursor: pointer;
-    padding: 10px;
-  }
-
   footer p {
     font-size: 14px;
   }

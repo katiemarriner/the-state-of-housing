@@ -6,6 +6,7 @@
   import TableMetrics from './../components/TableMetrics.svelte';
   import BigNumbers from '../components/BigNumbers.svelte';
   import BarChart from '../components/BarChart.svelte';
+    import ExplanationText from '../components/ExplanationText.svelte';
 
   $: width = null;
   $: height = width / 2;
@@ -22,13 +23,15 @@
     dataLatest = resAll[0];
     dataNational = resAll[1];
   });
+
+  $: console.log(dataLatest)
 </script>
 
-{#if dataLatest.length}
+{#if dataLatest.length > 0}
   <h2>National</h2>
-  <p>The national housing market shows [INCREASING/DECREASING] prices. The latest month shows a median listing price of [LATEST], which is [HIGHER/LOWER] than the 12-month moving average.</p>
-  <div class="container-national" bind:clientWidth={ width }>
-    <div class="container-bar national-price">
+  <ExplanationText data={ dataNational } />
+  <div class="container-national">
+    <div class="container-bar national-price" bind:clientWidth={ width }>
       <BigNumbers
         data={ dataNational }
         metricKey="median_listing_price"
@@ -40,8 +43,8 @@
       <BarChart
         data={ dataNational }
         metricKey='median_listing_price'
-        width={ width / 2 }
-        height={ height / 2 }
+        { width }
+        { height }
         margin={ null }
         formatType='currency'
         color='purple'
@@ -59,8 +62,8 @@
       <BarChart
         data={ dataNational }
         metricKey='active_listing_count'
-        width={ width / 2 }
-        height={ height / 2 }
+        { width }
+        { height }
         margin={ null }
         formatType='number'
         color='orange'
@@ -85,5 +88,18 @@
     display: flex;
     justify-content: space-between;
     gap: 20px;
+
+    @media (max-width:900px) {
+      flex-direction: column;
+    }
+
+    .container-bar {
+      width: 50%;
+
+      @media (max-width:900px) {
+        width: 100%;
+        max-width: 500px;
+      }
+    }
   }
 </style>

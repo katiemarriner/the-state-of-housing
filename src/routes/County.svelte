@@ -23,13 +23,11 @@
     bottom: 10,
     left: 0
   }
-
-  $: console.log(width)
 </script>
 
 {#if data}
   <div bind:clientWidth={ width } style="max-width:500px;">
-    <h1 class="countyName">{data.county_name}</h1>
+    <h2 class="countyName">{data.county_name}</h2>
     <BigNumbers
       { data }  
       metricKey='median_listing_price'
@@ -69,6 +67,8 @@
 {/if}
 
 <style lang="scss">
+  @use './../lib/style/variables';
+
   .countyName {
     margin-bottom: 10px;
   }

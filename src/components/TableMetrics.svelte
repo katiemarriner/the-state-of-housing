@@ -19,7 +19,6 @@
     });
 
   function sortData(sortValue) {
-    console.log(sortValue);
     currentValue = sortValue;
     direction = direction === 'asc' ? 'desc' : 'asc';
     sortedData = sortedData.sort((a, b) => {
@@ -29,7 +28,6 @@
         return b[sortValue] - a[sortValue]
       }
     });
-    console.log(sortedData)
   }
 
   sortData('median_listing_price')
@@ -41,26 +39,26 @@
     {
       label: 'Metro',
       upper: Infinity,
-      lower: 2500
+      lower: 500000
     },  
     {
       label: 'Large',
-      upper: 2500,
-      lower: 1000
+      upper: 500000,
+      lower: 250000
     },
     {
       label: 'Medium',
-      upper: 1000,
-      lower: 500,
+      upper: 250000,
+      lower: 100000,
     },
     {
       label: 'Small',
-      upper: 500,
-      lower: 100
+      upper: 100000,
+      lower: 50000
     },
     {
       label: 'Extra small',
-      upper: 100,
+      upper: 50000,
       lower: 0
     },
   ];
@@ -69,9 +67,10 @@
 <div class="container-table">
   <div class="container-header">
     <div class="label">Latest month: April 2025</div>
-    <div class="filter-buttons">
-      {#each buttonCountySize as btn}
-
+    <div class="buttons-filter">
+      <div class="label">Filter by county size (t/k)</div>
+      {#each buttonCountySize as btn, i}
+        <button class="button-filter {i === 0 ? 'button-filter-first' : ''}">{btn.label}</button>
       {/each}
     </div>
   </div>
@@ -132,6 +131,21 @@
     letter-spacing: 0.2px;
     margin: 10px 0;
     text-transform: uppercase;
+  }
+
+  .button-filter {
+    border-left: none;
+    padding: 5px 10px;
+  }
+
+  .button-filter-first {
+    border-left: 1px solid variables.$gray-dark;
+  }
+
+  .container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
   }
 
   .container-table {
@@ -223,10 +237,10 @@
     border-top: 6px solid variables.$pink-text;
   }
 
-  .table-pagination .pagination-nav {
+  .table-pagination :global(.light-pagination-nav .pagination-nav) {
     box-shadow: none;
     font-size: 14px;
-    justify-content: space-between;
+    justify-content: center;
   }
 
   .table-pagination :global(.option) {
