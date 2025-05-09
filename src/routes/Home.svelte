@@ -23,8 +23,6 @@
     dataLatest = resAll[0];
     dataNational = resAll[1];
   });
-
-  $: console.log(dataLatest)
 </script>
 
 {#if dataLatest.length > 0}

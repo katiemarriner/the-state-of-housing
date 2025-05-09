@@ -87,8 +87,8 @@
         <th class="num" on:click={() => sortData('active_listing_count')}>
           <SortArrows label='Inventory' active={currentValue === 'active_listing_count'} { direction } />
         </th>
-        <th class="num" on:click={() => sortData('active_listing_yoy')}>
-          <SortArrows label='Change year-over-year' active={currentValue === 'active_listing_yoy'} { direction } />
+        <th class="num" on:click={() => sortData('active_listing_count_yoy')}>
+          <SortArrows label='Change year-over-year' active={currentValue === 'active_listing_count_yoy'} { direction } />
         </th>
       </tr>
     </thead>
@@ -102,9 +102,9 @@
             { percentFormat(Math.abs(row.median_listing_price_yoy)) }
           </td>
           <td class="num">{ numberFormat(row.active_listing_count) }</td>
-          <td class="num {row.active_listing_yoy > 0 ? 'green' : row.active_listing_yoy < 0 ? 'pink' : ''}">
-            <span class="arrow {row.active_listing_yoy > 0 ? 'arrow-up-positive' : row.active_listing_yoy < 0 ? 'arrow-down-negative' : ''}"></span>
-            { percentFormat(Math.abs(row.active_listing_yoy)) }
+          <td class="num {row.active_listing_count_yoy > 0 ? 'green' : row.active_listing_count_yoy < 0 ? 'pink' : ''}">
+            <span class="arrow {row.active_listing_count_yoy > 0 ? 'arrow-up-positive' : row.active_listing_count_yoy < 0 ? 'arrow-down-negative' : ''}"></span>
+            { percentFormat(Math.abs(row.active_listing_count_yoy)) }
           </td>
         </tr>
       {/each}
@@ -219,6 +219,14 @@
 
   .pink {
     color: variables.$pink-text;
+  }
+
+  .arrow {
+    display: inline-block;
+    width: 0; 
+    height: 0; 
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
   }
 
   .arrow-up-negative {
