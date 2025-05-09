@@ -1,7 +1,7 @@
-import Home from './Home.svelte';
+import National from './National.svelte';
 import County from './County.svelte';
 
 export default {
-  '/': Home,
+  '/': National,
   '/county/:id': County 
 };
