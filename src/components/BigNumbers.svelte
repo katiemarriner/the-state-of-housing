@@ -50,7 +50,9 @@
       color: variables.$gray-light;
       font-family: "Lekton", monospace;
       font-size: 14px;
+      font-weight: 400;
       letter-spacing: 0.5px;
+      margin-top: 0;
       text-transform: uppercase;
     }
 

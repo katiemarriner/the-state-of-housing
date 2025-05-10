@@ -3,10 +3,10 @@
   import countiesMeta from  '../counties.store.js';
 
   import Search from "../components/Search.svelte";
-  import TableMetrics from '../components/TableMetrics.svelte';
+  import TableMetrics from '../components/tables/TableMetrics.svelte';
   import BigNumbers from '../components/BigNumbers.svelte';
-  import BarChart from '../components/BarChart.svelte';
-    import ExplanationText from '../components/ExplanationText.svelte';
+  import BarChart from '../components/charts/BarChart.svelte';
+  import ExplanationText from '../components/ExplanationText.svelte';
 
   $: width = null;
   $: height = width / 2;

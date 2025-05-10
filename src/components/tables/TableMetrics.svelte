@@ -4,8 +4,10 @@
   import { push } from 'svelte-spa-router';
   import { paginate, LightPaginationNav } from 'svelte-paginate';
 
-  import helpers from './../lib/js/helpers';
+  import helpers from '../../lib/js/helpers';
   import SortArrows from "./SortArrows.svelte";
+    import TableBodyMobile from './TableBodyMobile.svelte';
+    import TableHeaderMobile from './TableHeaderMobile.svelte';
 
   const formats = helpers.formats;
   $: width = 0;
@@ -94,7 +96,7 @@
           data-upper={btn.upper}
           data-lower={btn.lower}
           class="button-filter {i === 0 ? 'button-filter-first' : ''} { selectedSize === btn.key ? 'active' : ''}"
-          on:click={ (e) => filterCounties(btn) }>
+          onclick={ (e) => filterCounties(btn) }>
             {btn.label}
         </button>
       {/each}
@@ -104,26 +106,26 @@
   <table>
     <thead>
       <tr>
-        <th class="name" on:click={() => sortData('county_name')}>
+        <th class="name" onclick={() => sortData('county_name')}>
           <SortArrows label='County' active={currentValue === 'county_name'} { direction } />
         </th>
-        <th class="num" on:click={() => sortData('median_listing_price')}>
+        <th class="num" onclick={() => sortData('median_listing_price')}>
           <SortArrows label='Median home price' active={currentValue === 'median_listing_price'} { direction } />
         </th>
-        <th class="num" on:click={() => sortData('median_listing_price_yoy')}>
+        <th class="num" onclick={() => sortData('median_listing_price_yoy')}>
           <SortArrows label='Change year-over-year' active={currentValue === 'median_listing_price_yoy'} { direction } />
         </th>
-        <th class="num" on:click={() => sortData('active_listing_count')}>
+        <th class="num" onclick={() => sortData('active_listing_count')}>
           <SortArrows label='Inventory' active={currentValue === 'active_listing_count'} { direction } />
         </th>
-        <th class="num" on:click={() => sortData('active_listing_count_yoy')}>
+        <th class="num" onclick={() => sortData('active_listing_count_yoy')}>
           <SortArrows label='Change year-over-year' active={currentValue === 'active_listing_count_yoy'} { direction } />
         </th>
       </tr>
     </thead>
     <tbody>
       {#each paginatedItems as row }
-        <tr on:click={() => push(`#/county/${row.county_fips}`)}>
+        <tr onclick={() => push(`#/county/${row.county_fips}`)}>
           <td class="name">{ row.county_name }</td>
           <td class="num">{ formats.currency(row.median_listing_price) }</td>
           <td class="num {row.median_listing_price_yoy > 0 ? 'pink' : row.median_listing_price_yoy < 0 ? 'green' : ''}">
@@ -141,56 +143,8 @@
   </table>
   {:else}
   <div class="container-table-mobile">
-    <div class="table-mobile-header">
-      <div class="label">Sort by</div>
-      <button class="name" on:click={() => sortData('county_name')}>
-        <SortArrows label='County' active={currentValue === 'county_name'} { direction } />
-      </button>
-      <button class="num" on:click={() => sortData('median_listing_price')}>
-        <SortArrows label='Median home price' active={currentValue === 'median_listing_price'} { direction } />
-      </button>
-      <button class="num" on:click={() => sortData('median_listing_price_yoy')}>
-        <SortArrows label='Change year-over-year' active={currentValue === 'median_listing_price_yoy'} { direction } />
-      </button>
-      <button class="num" on:click={() => sortData('active_listing_count')}>
-        <SortArrows label='Inventory' active={currentValue === 'active_listing_count'} { direction } />
-      </button>
-      <button class="num" on:click={() => sortData('active_listing_count_yoy')}>
-        <SortArrows label='Change year-over-year' active={currentValue === 'active_listing_count_yoy'} { direction } />
-      </button>
-    </div>
-    <div class="table-mobile-body">
-      {#each paginatedItems as row }
-        <div class="table-mobile-row">
-          <div class="table-mobile-text">{ row['county_name'] }</div>
-          <div class="table-mobile-cell-half">
-            <div class="table-mobile-number">
-              <div class="label-number">Median listing price</div>
-              <div class="num">{ formats.currency(row.median_listing_price) }</div>
-            </div>
-            <div class="table-mobile-number">
-              <div class="label-number">Change year-over-year</div>
-              <div class="num {row.median_listing_price_yoy > 0 ? 'pink' : row.median_listing_price_yoy < 0 ? 'green' : ''}">
-                <span class="arrow {row.median_listing_price_yoy > 0 ? 'arrow-up-negative' : row.median_listing_price_yoy < 0 ? 'arrow-down-positive' : ''}"></span>
-                { formats.percent(Math.abs(row.median_listing_price_yoy)) }</div>
-            </div>
-          </div>
-          <div class="table-mobile-cell-half">
-            <div class="table-mobile-number">
-              <div class="label-number">Inventory</div>
-              <div class="num">{ formats.number(row.active_listing_count) }</div>
-            </div>
-            <div class="table-mobile-number">
-              <div class="label-number">Change year-over-year</div>
-              <div class="num {row.active_listing_count_yoy > 0 ? 'green' : row.active_listing_count_yoy < 0 ? 'pink' : ''}">
-                <span class="arrow {row.active_listing_count_yoy > 0 ? 'arrow-up-positive' : row.active_listing_count_yoy < 0 ? 'arrow-down-negative' : ''}"></span>
-                { formats.percent(Math.abs(row.active_listing_count_yoy)) }
-              </div>
-            </div>
-          </div>
-        </div>
-      {/each}
-    </div>
+    <TableHeaderMobile { sortData } { currentValue } { direction } />
+    <TableBodyMobile { paginatedItems } />
   </div>
   {/if}
   <div class="table-pagination">
@@ -206,15 +160,7 @@
 </div>
 
 <style lang="scss">
-  @use './../lib/style/variables';
-  
-  .label {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-    margin: 10px 0;
-    text-transform: uppercase;
-  }
+  @use './../../lib/style/variables';
 
   .button-filter {
     border-left: none;
@@ -280,6 +226,10 @@
     text-align: left;
     width: 150px;
 
+    &.name {
+      text-align: left;
+    }
+
     &.num {
       text-align: right;
       width: initial;
@@ -301,53 +251,10 @@
     }
   }
 
-  .label-number {
-    font-size: 10px;
-    letter-spacing: 0.2;
-    margin: 2.5px 0;
-    text-transform: uppercase;
-  }
-
   .container-table-mobile {
-    .table-mobile-header {
-      .label {
-        margin-bottom: 0;
-      }
-      
-      button {
-        border: none;
-        display: block;
-        padding: 2.55px 0;
-      }
-    }
-    .table-mobile-row {
-      padding: 15px 0;
-      border-bottom: 1px solid variables.$gray-grid;
-    }
-
-    .table-mobile-cell-half {
-      display: flex;
-      justify-content: space-between;
-      margin: 5px 0;
-
-      font-size: 16px;
-    }
-
     .num {
       font-family: "Lekton", monospace;
     }
-  }
-
-  .purple {
-    color: variables.$purple;
-  }
-
-  .green {
-    color: variables.$green-text;
-  }
-
-  .pink {
-    color: variables.$pink-text;
   }
 
   .arrow {

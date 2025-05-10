@@ -79,3 +79,23 @@ button {
   cursor: pointer;
   padding: 10px;
 }
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  margin: 10px 0;
+  text-transform: uppercase;
+}
+
+.purple {
+  color: $purple;
+}
+
+.green {
+  color: $green-text;
+}
+
+.pink {
+  color: $pink-text;
+}

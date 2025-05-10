@@ -102,7 +102,7 @@
   {/if}
 
 <style lang="scss">
-  @use './../lib/style/variables';
+  @use './../../lib/style/variables';
 
   .container-legend {
     display: flex;

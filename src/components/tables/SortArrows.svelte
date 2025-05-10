@@ -2,7 +2,7 @@
   export let label, active, direction;
 </script>
 
-<div class="flex">
+<div class="flex { label === 'County' ? 'name' : '' }">
   <span>{ label }</span>
   <div class="arrows-dir">
     <span class="arrow arrow-up {active && direction === 'asc' ? 'active' : ''}"></span>
@@ -11,29 +11,22 @@
 </div>
 
 <style lang="scss">
-  @use "./../lib/style/variables";
+  @use "./../../lib/style/variables";
   
   .flex {
     display: flex;
     align-items: center;
     justify-content: end;
+
+    &.name {
+      justify-content: start;
+    }
   }
 
-  th, th span {
+  span {
     text-transform: uppercase; 
     font-size: 12px;
     font-weight: 600;
-  }
-
-  th {
-    cursor: pointer;
-    text-align: left;
-    width: 150px;
-
-    &.num {
-      text-align: right;
-      width: initial;
-    }
   }
 
   .arrow {

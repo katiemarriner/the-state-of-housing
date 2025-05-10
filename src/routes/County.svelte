@@ -2,8 +2,7 @@
   export let params = {};
 
   import BigNumbers from '../components/BigNumbers.svelte';
-  import BarChart from '../components/BarChart.svelte';
-  import LineChart from '../components/LineChart.svelte';
+  import BarChart from '../components/charts/BarChart.svelte';
 
   import { onMount } from 'svelte'; 
   
@@ -53,7 +52,7 @@
       { data }
       metricKey="active_listing_count"
       label="Inventory"
-      labelSub=""
+      labelSub="Active listings"
       formatType="number" 
       color="orange"
       positiveValue="positive"
