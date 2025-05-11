@@ -25,7 +25,7 @@ An interactive data dashboard, visualizing housing prices and inventory across U
 6. `jupyter lab`
 7. Run the Jupyter Notebook
 
-## How to run
+## How to run the app locally and deploy
 
 ### Dev
 `npm run dev`
