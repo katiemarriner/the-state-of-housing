@@ -1,41 +1,51 @@
 <script>
-  export let dataLatest;
+  export let dataLatest, dataStates;
 
   import { push } from 'svelte-spa-router';
   import { paginate, LightPaginationNav } from 'svelte-paginate';
-
   import helpers from '../../lib/js/helpers';
-  import SortArrows from "./SortArrows.svelte";
-    import TableBodyMobile from './TableBodyMobile.svelte';
-    import TableHeaderMobile from './TableHeaderMobile.svelte';
+  
+  import TableBodyMobile from './TableBodyMobile.svelte';
+  import TableHeaderMobile from './TableHeaderMobile.svelte';
+  import TableHeaderDesktop from './TableHeaderDesktop.svelte';
 
-  const formats = helpers.formats;
+  const { formats, time } = helpers;
+
   $: width = 0;
+  let latestMonth = time.monthYearFormat(time.parseTime(dataLatest['latest_month']));
 
-  $: currentValue = 'median_listing_price';
-  $: direction = 'asc';
-  let sortedData = dataLatest
+  // Default sort and filter;
+  let currentValue = 'median_listing_price';
+  let direction = 'desc';
+  let selectedSize = '';
+  $: selectedState = '';
+
+  let sortedData = dataLatest['data']
     .filter(d => {
       return d.active_listing_count > 10;
     });
   
   let selectedData = sortedData;
-  let selectedSize = '';
 
-  function sortData(sortValue) {
+  function sortData(sortValue, dir) {
     currentValue = sortValue;
-    direction = direction === 'asc' ? 'desc' : 'asc';
+    if(dir) {
+      direction = dir;
+    } else {
+      direction = direction === 'asc' ? 'desc' : 'asc';
+    }
     selectedData = selectedData.sort((a, b) => {
       if(direction === 'desc') {
-        return a[sortValue] - b[sortValue]
+        return b[sortValue] - a[sortValue];
       } else {
-        return b[sortValue] - a[sortValue]
+        return a[sortValue] - b[sortValue];
       }
     });
   }
 
-  function filterCounties({ upper, lower, key }) {
+  function filterCountiesBySize({ upper, lower, key }) {
     // reset if the active button is clicked on;
+    selectedState = '';
     if(selectedSize === key) {
       selectedData = sortedData;  
       selectedSize = '';
@@ -47,7 +57,19 @@
     }
   }
 
-  sortData('median_listing_price')
+  function filterCountiesByState({ target }) {
+    const value = target.value;
+    selectedSize = '';
+    if(value && value !== '000') {
+      selectedData = sortedData.filter(d => {
+        return d['county_fips'].substring(0, 2) === value;
+      });
+    } else {
+      selectedData = sortedData;
+    }
+  }
+
+  sortData('median_listing_price', 'desc');
   let currentPage = 1
   let pageSize = 10
   $: paginatedItems = paginate({ items: selectedData, pageSize, currentPage });
@@ -88,15 +110,23 @@
 
 <div class="container-table" bind:clientWidth={ width }>
   <div class="container-header">
-    <div class="label">Latest month: April 2025</div>
-    <div class="buttons-filter">
+    <div class="filter-dropdown">
+      <label for="dropdown-states" class="label">Filter by state</label>
+      <select name="dropdown-states" bind:value={ selectedState } onchange={ filterCountiesByState }>
+        <option value="" selected={selectedState === ''}>All</option>
+        {#each dataStates as state}
+          <option value={state.fips} selected={selectedState === state.fips}>{state.name}</option>
+        {/each}
+      </select>
+    </div>
+    <div class="filter-buttons">
       <div class="label">Filter by county size</div>
       {#each buttonCountySize as btn, i}
         <button
           data-upper={btn.upper}
           data-lower={btn.lower}
-          class="button-filter {i === 0 ? 'button-filter-first' : ''} { selectedSize === btn.key ? 'active' : ''}"
-          onclick={ (e) => filterCounties(btn) }>
+          class="filter-button {i === 0 ? 'filter-button-first' : ''} { selectedSize === btn.key ? 'active' : ''}"
+          onclick={ (e) => filterCountiesBySize(btn) }>
             {btn.label}
         </button>
       {/each}
@@ -104,25 +134,7 @@
   </div>
   {#if width >= 550}
   <table>
-    <thead>
-      <tr>
-        <th class="name" onclick={() => sortData('county_name')}>
-          <SortArrows label='County' active={currentValue === 'county_name'} { direction } />
-        </th>
-        <th class="num" onclick={() => sortData('median_listing_price')}>
-          <SortArrows label='Median home price' active={currentValue === 'median_listing_price'} { direction } />
-        </th>
-        <th class="num" onclick={() => sortData('median_listing_price_yoy')}>
-          <SortArrows label='Change year-over-year' active={currentValue === 'median_listing_price_yoy'} { direction } />
-        </th>
-        <th class="num" onclick={() => sortData('active_listing_count')}>
-          <SortArrows label='Inventory' active={currentValue === 'active_listing_count'} { direction } />
-        </th>
-        <th class="num" onclick={() => sortData('active_listing_count_yoy')}>
-          <SortArrows label='Change year-over-year' active={currentValue === 'active_listing_count_yoy'} { direction } />
-        </th>
-      </tr>
-    </thead>
+    <TableHeaderDesktop { sortData } { currentValue } { direction } { latestMonth } />
     <tbody>
       {#each paginatedItems as row }
         <tr onclick={() => push(`#/county/${row.county_fips}`)}>
@@ -162,7 +174,12 @@
 <style lang="scss">
   @use './../../lib/style/variables';
 
-  .button-filter {
+  label.label, .label {
+    display: block;
+    margin-bottom: 2.5px;
+  }
+
+  .filter-button {
     border-left: none;
     padding: 5px 10px;
 
@@ -171,14 +188,15 @@
     }
   }
 
-  .button-filter-first {
-    border-left: 1px solid variables.$gray-dark;
+  .filter-button-first {
+    border-left: variables.$selector-border;
   }
 
   .container-header {
     display: flex;
     justify-content: space-between;
     align-items: end;
+    padding: 10px 0;
 
     @media screen and (max-width: 550px) {
       flex-direction: column;
@@ -192,10 +210,7 @@
 
   table {
     border-collapse: collapse;
-  }
-
-  thead tr {
-    border-bottom: 1px solid variables.$gray-grid;
+    width: 100%;
   }
 
   tbody tr {
@@ -207,38 +222,14 @@
     }
   }
 
-  th, td {
+  td {
+    font-size: 14px;
+    font-family: "Lato", sans-serif;
     padding: 10px 5px;
 
     &:first-child {
       padding-left: 0px;
     }
-  }
-
-  th, th span {
-    text-transform: uppercase; 
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  th {
-    cursor: pointer;
-    text-align: left;
-    width: 150px;
-
-    &.name {
-      text-align: left;
-    }
-
-    &.num {
-      text-align: right;
-      width: initial;
-    }
-  }
-
-  td {
-    font-size: 14px;
-    font-family: "Lato", sans-serif;
 
     &.name {
       color: variables.$gray-dark;
@@ -247,7 +238,6 @@
     &.num {
       text-align: right;
       font-family: "Lekton", monospace;
-      min-width: 100px;
     }
   }
 
@@ -255,30 +245,6 @@
     .num {
       font-family: "Lekton", monospace;
     }
-  }
-
-  .arrow {
-    display: inline-block;
-    width: 0; 
-    height: 0; 
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-  }
-
-  .arrow-up-negative {
-    border-bottom: 6px solid variables.$pink-text;
-  }
-
-  .arrow-up-positive {
-    border-bottom: 6px solid variables.$green-text;
-  }
-
-  .arrow-down-positive {
-    border-top: 6px solid variables.$green-text;
-  }
-
-  .arrow-down-negative {
-    border-top: 6px solid variables.$pink-text;
   }
 
   .table-pagination :global(.light-pagination-nav .pagination-nav) {

@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import countiesMeta from  '../counties.store.js';
+  import { dataStore, loadData } from './../counties.store.js';
 
   import Search from "../components/Search.svelte";
   import TableMetrics from '../components/tables/TableMetrics.svelte';
@@ -10,26 +10,34 @@
 
   $: width = null;
   $: height = width / 2;
+
+  let countiesMeta = [];
+  dataStore.subscribe(res => {
+    countiesMeta = res
+  })
   
   const url = import.meta.env.BASE_URL;
-  $: dataLatest = [];
-  $: dataNational = [];
+  let dataLatest, dataNational, dataStates;
   onMount(async () => {
-    const resAll = await Promise.all([`${url}/data/latest.json`, `${url}/data/national.json`].map(loc => {
+    const urls = [`${url}/data/latest.json`, `${url}/data/national.json`, `${url}/data/states.json`]
+    const resAll = await Promise.all(urls.map(loc => {
       return fetch(loc).then(res => {
         return res.json()
       })
     }));
     dataLatest = resAll[0];
     dataNational = resAll[1];
+    dataStates = resAll[2];
+
+    loadData();
   });
 </script>
 
-{#if dataLatest.length > 0}
+{#if dataLatest}
   <h2>National</h2>
   <ExplanationText data={ dataNational } />
   <div class="container-national">
-    <div class="container-bar national-price" bind:clientWidth={ width }>
+    <div class="container-national-chart national-price" bind:clientWidth={ width }>
       <BigNumbers
         data={ dataNational }
         metricKey="median_listing_price"
@@ -51,7 +59,7 @@
         showAnnotation={false}
       />
     </div>
-    <div class="container-bar national-inventory">
+    <div class="container-national-chart national-inventory">
       <BigNumbers
         data={ dataNational }
         metricKey="active_listing_count"
@@ -76,7 +84,7 @@
   </div>
   <h2>Search for your county</h2>
   <Search { countiesMeta } />
-  <TableMetrics { dataLatest } />
+  <TableMetrics { dataLatest } { dataStates } />
 {/if}
 
 <style lang="scss">
@@ -87,7 +95,6 @@
   }
 
   .container-national {
-    max-width: 768px;
     display: flex;
     justify-content: space-between;
     gap: 20px;
@@ -96,7 +103,7 @@
       flex-direction: column;
     }
 
-    .container-bar {
+    .container-national-chart {
       width: 50%;
 
       @media (max-width:900px) {

@@ -38,6 +38,10 @@ $yellow-light: #FEE694;
 $blue-light: #8BC7E8;
 $red-light: #FE8E90;
 
+$selector-border: 1px solid $gray-grid;
+
+
+// HTML Native Tags
 * {
   font-family: "Lato", sans-serif;
   font-weight: 400;
@@ -74,19 +78,28 @@ a button {
 button {
   background-color: #fff;
   border-radius: 0;
-  border: 1px solid #333;
+  border: $selector-border;
   box-shadow: none;
   cursor: pointer;
   padding: 10px;
 }
 
-.label {
+.label, label {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.2px;
   margin: 10px 0;
   text-transform: uppercase;
 }
+
+select {
+  background-color: #fff;
+  border: $selector-border;
+  box-shadow: none;
+  padding: 5px 10px;
+}
+
+// Color Class Helpers
 
 .purple {
   color: $purple;
@@ -98,4 +111,30 @@ button {
 
 .pink {
   color: $pink-text;
+}
+
+// CSS Arrows
+
+.arrow {
+  display: inline-block;
+  width: 0; 
+  height: 0; 
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+
+.arrow-up-negative {
+  border-bottom: 6px solid $pink-text;
+}
+
+.arrow-up-positive {
+  border-bottom: 6px solid $green-text;
+}
+
+.arrow-down-positive {
+  border-top: 6px solid $green-text;
+}
+
+.arrow-down-negative {
+  border-top: 6px solid $pink-text;
 }

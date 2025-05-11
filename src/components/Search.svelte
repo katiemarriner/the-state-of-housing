@@ -9,22 +9,19 @@
     return {...obj, boldedMatch };
   }
   
-  let counties
-  countiesMeta.subscribe(items => counties = items);
-  
   let inputValue;
   let filteredCounties;
   const filterCounties = () => {
-	let storageArr = []
-	if (inputValue) {
-		counties.forEach(county => {
+	  let storageArr = []
+	  if (inputValue) {
+		  countiesMeta.forEach(county => {
 			if (county.county_name.toLowerCase().startsWith(inputValue.toLowerCase())) {
-				storageArr = [...storageArr, makeMatchBold(county, 'county_name')];
-			}
-		});
-	}
-	filteredCounties = storageArr;
-}
+				  storageArr = [...storageArr, makeMatchBold(county, 'county_name')];
+			  }
+		  });
+	  }
+	  filteredCounties = storageArr;
+  };
 </script>
 
 <form autocomplete="off">
