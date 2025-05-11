@@ -1,6 +1,6 @@
 # The State of Housing in America 🏠
 
-An interactive data dashboard, visualizing housing prices across U.S. counties.
+An interactive data dashboard, visualizing housing prices and inventory across U.S. counties.
 
 [Live Demo 🌐](http://katiemarriner.com/state-of-housing/)
 
