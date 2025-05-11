@@ -1,7 +1,7 @@
 <script>
-  export let paginatedItems;
-  import { push } from 'svelte-spa-router';
+  export let paginatedItems, selectedFIPs;
 
+  import { push } from 'svelte-spa-router';
   import helpers from './../../lib/js/helpers';
 
   const { formats } = helpers;
@@ -9,7 +9,7 @@
 
 <tbody>
   {#each paginatedItems as row }
-    <tr onclick={() => push(`#/county/${row.county_fips}`)}>
+    <tr class="{selectedFIPs === row.county_fips ? 'active' : ''}" onclick={() => push(`#/county/${row.county_fips}`)}>
       <td class="name">{ row.county_name }</td>
       <td class="num">{ formats.currency(row.median_listing_price) }</td>
       <td class="num {row.median_listing_price_yoy > 0 ? 'pink' : row.median_listing_price_yoy < 0 ? 'green' : ''}">
@@ -31,6 +31,10 @@
   tbody tr {
     cursor: pointer;
     border-bottom: 0.5px solid variables.$gray-grid;
+
+    &.active td {
+      font-weight: 900;
+    }
 
     &:hover {
       background: variables.$gray-lightest;
@@ -54,5 +58,17 @@
       text-align: right;
       font-family: "Lekton", monospace;
     }
+  }
+
+  .pink {
+    color: variables.$pink-text
+  }
+
+  .purple {
+    color: variables.$purple-text
+  }
+
+.green {
+    color: variables.$green-text
   }
 </style>

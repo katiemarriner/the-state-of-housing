@@ -22,14 +22,21 @@ export async function loadNationalData() {
 }
 
 export async function loadStateData(fips) {
-  const res = await fetch(`${url}/public/data/latest.json`);
-  let json = await res.json();
-  const data = json['data'].filter(d => {
+  const urls = [`${url}/public/data/latest.json`, `${url}/public/data/states.json`]
+  const res = await Promise.all(urls.map(url2 => {
+    return fetch(url2);
+  }));
+  let latest = await res[0].json();
+  let stateMeta = await res[1].json();
+  const data = latest['data'].filter(d => {
     return d['county_fips'].substring(0, 2) === fips;
   });
   dataStore.update(store => ({
     ...store,
-    state: data
+    state: {
+      data,
+      ...stateMeta.find(d => d.fips === fips.substring(0, 2))
+    }
   }))
 }
 

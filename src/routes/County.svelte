@@ -22,7 +22,6 @@
     loadNationalData();
     loadStateData(params.id.substring(0, 2));
   });
-  
 
   $: width = 0;
   $: height = width / 2;
@@ -84,8 +83,8 @@
     </div>
   </div>
   <div class="container-county-table">
-    <h3>Compare to similar counties</h3>
-    <TableCounty dataState={ stateData } />
+    <h3>Compare to counties in { stateData.name }</h3>
+    <TableCounty dataState={ stateData } selectedFIPs={ params.id } />
   </div>
 {/if}
 

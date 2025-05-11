@@ -1,7 +1,6 @@
 <script>
   export let dataLatest, dataStates;
 
-  import { push } from 'svelte-spa-router';
   import { paginate, LightPaginationNav } from 'svelte-paginate';
   import helpers from '../../lib/js/helpers';
   
@@ -10,7 +9,7 @@
   import TableHeaderDesktop from './TableHeaderDesktop.svelte';
     import TableBodyDesktop from './TableBodyDesktop.svelte';
 
-  const { formats, time } = helpers;
+  const { time } = helpers;
 
   $: width = 0;
   let latestMonth = time.monthYearFormat(time.parseTime(dataLatest['latest_month']));

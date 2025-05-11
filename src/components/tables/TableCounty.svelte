@@ -1,12 +1,12 @@
 <script>
-  export let dataState;
+  export let dataState, selectedFIPs;
 
   import TableBodyDesktop from "./TableBodyDesktop.svelte";
   import TableHeaderDesktop from "./TableHeaderDesktop.svelte";
 
   $: width = 0;
 
-  let sortedData = dataState
+  let sortedData = dataState.data
     .filter(d => {
       return d.active_listing_count > 10;
     });
@@ -33,12 +33,13 @@
     });
   }
 
+  sortData(currentValue, 'desc')
 </script>
 
 <div class="container-table" bind:clientWidth={ width }>
   <table>
     <TableHeaderDesktop { sortData } { currentValue } { direction } { latestMonth }/>
-    <TableBodyDesktop paginatedItems={ selectedData } />
+    <TableBodyDesktop paginatedItems={ selectedData } { selectedFIPs }/>
   </table>
 </div>
 
