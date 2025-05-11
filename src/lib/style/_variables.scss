@@ -40,7 +40,6 @@ $red-light: #FE8E90;
 
 $selector-border: 1px solid $gray-grid;
 
-
 // HTML Native Tags
 * {
   font-family: "Lato", sans-serif;
@@ -97,20 +96,6 @@ select {
   border: $selector-border;
   box-shadow: none;
   padding: 5px 10px;
-}
-
-// Color Class Helpers
-
-.purple {
-  color: $purple;
-}
-
-.green {
-  color: $green-text;
-}
-
-.pink {
-  color: $pink-text;
 }
 
 // CSS Arrows

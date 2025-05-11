@@ -18,7 +18,7 @@
   let currentValue = 'median_listing_price';
   let direction = 'desc';
   let selectedSize = '';
-  $: selectedState = '';
+  let selectedState = '';
 
   let sortedData = dataLatest['data']
     .filter(d => {

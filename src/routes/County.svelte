@@ -2,27 +2,31 @@
   export let params = {};
 
   import { onMount } from 'svelte'; 
-  import { dataStore, loadNationalData } from '../counties.store';
+  import { dataStore, loadNationalData, loadStateData } from '../counties.store';
   
   import BigNumbers from '../components/BigNumbers.svelte';
   import BarChart from '../components/charts/BarChart.svelte';
   import ExplanationTextCounty from '../components/ExplanationTextCounty.svelte';
+  import TableCounty from '../components/tables/TableCounty.svelte';
 
   const url = import.meta.env.BASE_URL;
-  let data;
+  let data
   $: dataNational = null;
+  $: dataState = null;
   dataStore.subscribe(res => {
-    dataNational = res
-  })
+    dataNational = res.national;
+    dataState = res.state;
+  });
 
   onMount(async () => {
     const res = await fetch(`${url}/data/counties/${params.id}.json`);
     data = await res.json();
 
     loadNationalData();
+    loadStateData(params.id.substring(0, 2))
   });
 
-  $: width = 500;
+  $: width = 0;
   $: height = width / 2;
   const margin = {
     top: 25,
@@ -81,6 +85,10 @@
       />
     </div>
   </div>
+  <div class="container-county-table">
+    <h3>Compare to similar counties</h3>
+    <TableCounty />
+  </div>
 {/if}
 
 <style lang="scss">
@@ -93,7 +101,7 @@
   .container-county-charts {
     display: flex;
     justify-content: space-between;
-    gap: 30px;
+    gap: 20px;
 
     @media (max-width:900px) {
       flex-direction: column;
@@ -103,8 +111,7 @@
       width: 50%;
 
       @media (max-width:900px) {
-        width: 100%;
-        max-width: 500px;
+        max-width: 450px;
       }
     }
   }

@@ -14,7 +14,7 @@
   let countiesMeta = [];
   dataStore.subscribe(res => {
     countiesMeta = res
-  })
+  });
   
   const url = import.meta.env.BASE_URL;
   let dataLatest, dataNational, dataStates;
