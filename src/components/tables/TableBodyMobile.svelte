@@ -1,5 +1,5 @@
 <script>
-  export let paginatedItems
+  export let paginatedItems;
 
   import helpers from "../../lib/js/helpers";
 
