@@ -3,7 +3,7 @@
 
   import helpers from './../lib/js/helpers';
 
-  const { percent, currency, number } = helpers.formats;
+  const { percent, currency } = helpers.formats;
   const { parseTime, monthYearFormat } = helpers.time;
 
   function rollingAverageDifference(key) {

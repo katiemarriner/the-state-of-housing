@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { dataStore, loadData } from './../counties.store.js';
+  import { loadData, dataMeta } from './../counties.store.js';
 
   import Search from "../components/Search.svelte";
   import TableMetrics from '../components/tables/TableMetrics.svelte';
@@ -11,10 +11,7 @@
   $: width = null;
   $: height = width / 2;
 
-  let countiesMeta = [];
-  dataStore.subscribe(res => {
-    countiesMeta = res
-  });
+  $: countiesMeta = $dataMeta;
   
   const url = import.meta.env.BASE_URL;
   let dataLatest, dataNational, dataStates;
