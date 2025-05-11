@@ -1,24 +1,22 @@
-# The State of Housing in the United States
+# The State of Housing in America 🏠
 
-An interactive dashboard that shows median home prices, inventory and sales over time by county.
+An interactive data dashboard, visualizing housing prices across U.S. counties.
 
-## T/k
-- [X] Mobile view of the table
-- [ ] Comparison with national average metrics on county pages
-- [ ] Comparison with state-level metrics
-- [ ] On hover of the bar chart show that month of every year
-- [ ] Table inside each county page that shows counties in the state and counties with similar populations
-- [ ] Weekly report for national-level
-- [X] Working search bar
-- [X] Reconcile new Connecticut county-equivalents to counties
-- [X] 12-month moving average for median home prices
-- [X] Chart for inventory (YoY with 12-month moving average)
-- [X] Create a list of most expensive median home prices
-- [X] Paginate table on the main page and make it sortable
-- [X] Monthly national report (median home prices, inventory, home sales)
-- [X] Buttons to filter by county size
+[Live Demo 🌐](http://katiemarriner.com/state-of-housing/)
 
-## How to format data
+## Tech Stack 💻
+- Frontend: Vanilla JS, D3.js, Svelte 
+- Backend: Python, pandas, Jupyter Lab (for data formatting)
+
+## Data Sources 📈
+- [Realtor.com](https://www.realtor.com/research/data/) for median listing price, active listing count and median days on market
+  - Monthly inventory -> Historical data -> County. And Weekly inventory -> National (View US Data)
+- U.S. Census for population
+
+## Features to add 📋
+[See the project board for features t/k](https://github.com/users/katiemarriner/projects/1/views/1)
+
+## How to format the data
 1. Download data from [Realtor.com](https://www.realtor.com/research/data/). Monthly inventory -> Historical data -> County. And Weekly inventory -> National (View US Data)
 2. `cd tasks/`
 3. Make sure you have pipenv installed
@@ -37,3 +35,6 @@ An interactive dashboard that shows median home prices, inventory and sales over
 
 ### Deploy to GitHub pages
 `npm run deploy`
+
+## Author
+Katie Marriner · [katiemarriner.com](https://katiemarriner.com)
