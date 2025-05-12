@@ -2,7 +2,7 @@
 
 An interactive data dashboard, visualizing housing prices and inventory across U.S. counties.
 
-[Live Demo 🌐](http://katiemarriner.com/state-of-housing/)
+[Live Demo 🌐](http://katiemarriner.com/the-state-of-housing/)
 
 ## Tech Stack 💻
 - Frontend: Vanilla JS, D3.js, Svelte 
