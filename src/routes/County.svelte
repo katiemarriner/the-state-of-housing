@@ -2,6 +2,7 @@
   export let params = {};
 
   import { onMount } from 'svelte'; 
+  import { fade } from 'svelte/transition'
   import { loadNationalData, loadStateData, dataNational, dataState, resetData } from '../counties.store';
   
   import BigNumbers from '../components/BigNumbers.svelte';
@@ -14,14 +15,17 @@
   $: national = $dataNational;
   $: stateData = $dataState;
 
-  onMount(async () => {
+  async function updateData(fips) {
+    fips = fips || params.id;
     resetData();
-    const res = await fetch(`${url}/data/counties/${params.id}.json`);
+    const res = await fetch(`${url}/data/counties/${fips}.json`);
     data = await res.json();
 
     loadNationalData();
-    loadStateData(params.id.substring(0, 2));
-  });
+    loadStateData(fips.substring(0, 2));
+  }
+
+  onMount(updateData);
 
   $: width = 0;
   $: height = width / 2;
@@ -36,7 +40,7 @@
 {#if national && stateData && data}
   <h2 class="countyName">{data.county_name}</h2>
   <ExplanationTextCounty dataCounty={ data } dataNational={ national } />
-  <div class="container-county-charts">
+  <div class="container-county-charts" in:fade={{duration: 500}}>
     <div class="container-county-chart" bind:clientWidth={ width }>
       <BigNumbers
         { data }  
@@ -84,7 +88,7 @@
   </div>
   <div class="container-county-table">
     <h3>Compare to counties in { stateData.name }</h3>
-    <TableCounty dataState={ stateData } selectedFIPs={ params.id } />
+    <TableCounty { updateData } dataState={ stateData } selectedFIPs={ params.id } />
   </div>
 {/if}
 

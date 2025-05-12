@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { fade } from 'svelte/transition';
   import { loadData, dataMeta } from './../counties.store.js';
 
   import Search from "../components/Search.svelte";
@@ -33,7 +34,7 @@
 {#if dataLatest}
   <h2>National</h2>
   <ExplanationText data={ dataNational } />
-  <div class="container-national">
+  <div class="container-national" in:fade={{duration: 500}}>
     <div class="container-national-chart national-price" bind:clientWidth={ width }>
       <BigNumbers
         data={ dataNational }

@@ -8,7 +8,7 @@
 
 <div class="table-mobile-body">
   {#each paginatedItems as row }
-    <div class="table-mobile-row {selectedFIPs === row['county_fips'] > 'active' : ''}">
+    <div class="table-mobile-row {selectedFIPs === row['county_fips'] ? 'active' : ''}">
       <div class="table-mobile-text">{ row['county_name'] }</div>
       <div class="table-mobile-cell-half">
         <div class="table-mobile-number">

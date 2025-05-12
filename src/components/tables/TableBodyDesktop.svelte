@@ -1,15 +1,26 @@
 <script>
-  export let paginatedItems, selectedFIPs;
+  let { paginatedItems, selectedFIPs, updateData } = $props();
 
   import { push } from 'svelte-spa-router';
   import helpers from './../../lib/js/helpers';
 
   const { formats } = helpers;
+
+  function navigateToNewPage(fips) {
+    push(`#/county/${fips}`)
+    if(updateData) {
+      updateData(fips);
+    }    
+  }
 </script>
 
 <tbody>
   {#each paginatedItems as row }
-    <tr class="{selectedFIPs === row.county_fips ? 'active' : ''}" onclick={() => push(`#/county/${row.county_fips}`)}>
+    <tr
+      class="{selectedFIPs === row.county_fips ? 'active' : ''}"
+      onclick={() => navigateToNewPage(row['county_fips'])}
+      ontouchend={() => navigateToNewPage(row['county_fips'])}
+    >
       <td class="name">{ row.county_name }</td>
       <td class="num">{ formats.currency(row.median_listing_price) }</td>
       <td class="num {row.median_listing_price_yoy > 0 ? 'pink' : row.median_listing_price_yoy < 0 ? 'green' : ''}">

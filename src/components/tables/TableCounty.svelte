@@ -1,20 +1,20 @@
 <script>
-  export let dataState, selectedFIPs;
+  let { dataState, selectedFIPs, updateData } = $props();
 
   import TableBodyDesktop from "./TableBodyDesktop.svelte";
   import TableHeaderDesktop from "./TableHeaderDesktop.svelte";
 
-  $: width = 0;
+  let width = $state(0);
 
   let sortedData = dataState.data
     .filter(d => {
       return d.active_listing_count > 10;
     });
   
-  let selectedData = sortedData;
+  let selectedData = $state(sortedData);
 
-  let currentValue = 'median_listing_price';
-  let direction = 'desc';
+  let currentValue = $state('median_listing_price');
+  let direction = $state('desc');
   let latestMonth;
 
   function sortData(sortValue, dir) {
@@ -33,13 +33,13 @@
     });
   }
 
-  sortData(currentValue, 'desc')
+  sortData(currentValue, 'desc');
 </script>
 
 <div class="container-table" bind:clientWidth={ width }>
   <table>
-    <TableHeaderDesktop { sortData } { currentValue } { direction } { latestMonth }/>
-    <TableBodyDesktop paginatedItems={ selectedData } { selectedFIPs }/>
+    <TableHeaderDesktop { sortData } { currentValue } { direction } { latestMonth } />
+    <TableBodyDesktop paginatedItems={ selectedData } { selectedFIPs } { updateData } />
   </table>
 </div>
 

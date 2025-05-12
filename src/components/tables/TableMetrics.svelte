@@ -4,10 +4,10 @@
   import { paginate, LightPaginationNav } from 'svelte-paginate';
   import helpers from '../../lib/js/helpers';
   
-  import TableBodyMobile from './TableBodyMobile.svelte';
-  import TableHeaderMobile from './TableHeaderMobile.svelte';
   import TableHeaderDesktop from './TableHeaderDesktop.svelte';
-    import TableBodyDesktop from './TableBodyDesktop.svelte';
+  import TableBodyDesktop from './TableBodyDesktop.svelte';
+  import TableHeaderMobile from './TableHeaderMobile.svelte';
+  import TableBodyMobile from './TableBodyMobile.svelte';
 
   const { time } = helpers;
 

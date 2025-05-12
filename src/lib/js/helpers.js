@@ -5,7 +5,7 @@ const helpers = {
   formats: {
     percent: format('.2%'),
     currency: format('($,.0f'),
-    number: format(',')
+    number: format(',.0f')
   },
   time: {
     parseTime: timeParse('%Y-%m-%d'),
