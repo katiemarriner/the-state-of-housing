@@ -113,6 +113,7 @@
 
       @media (max-width:900px) {
         max-width: 450px;
+        width: 100%;
       }
     }
   }

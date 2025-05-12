@@ -145,6 +145,10 @@
       stroke: #fff;
       stroke-width: 3px;
 
+      @media (max-width: 550px) {
+        stroke-width: 0.5px;
+      }
+
       &.purple {
         fill: variables.$purple-light;
       }

@@ -3,6 +3,8 @@
 
   import TableBodyDesktop from "./TableBodyDesktop.svelte";
   import TableHeaderDesktop from "./TableHeaderDesktop.svelte";
+  import TableBodyMobile from "./TableBodyMobile.svelte";
+  import TableHeaderMobile from "./TableHeaderMobile.svelte";
 
   let width = $state(0);
 
@@ -37,10 +39,17 @@
 </script>
 
 <div class="container-table" bind:clientWidth={ width }>
-  <table>
-    <TableHeaderDesktop { sortData } { currentValue } { direction } { latestMonth } />
-    <TableBodyDesktop paginatedItems={ selectedData } { selectedFIPs } { updateData } />
-  </table>
+  {#if width >= 550}
+    <table>
+      <TableHeaderDesktop { sortData } { currentValue } { direction } { latestMonth } />
+      <TableBodyDesktop paginatedItems={ selectedData } { selectedFIPs } { updateData } />
+    </table>
+  {:else}
+    <div class="container-table-mobile">
+      <TableHeaderMobile { sortData } { currentValue } { direction } />
+      <TableBodyMobile { updateData } paginatedItems={ selectedData } { selectedFIPs } />
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">

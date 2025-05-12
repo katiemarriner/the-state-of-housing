@@ -1,14 +1,26 @@
 <script>
-  export let paginatedItems, selectedFIPs;
+  let { paginatedItems, selectedFIPs, updateData } = $props();
 
-  import helpers from "../../lib/js/helpers";
+  import { push } from 'svelte-spa-router';
+  import helpers from './../../lib/js/helpers';
 
-  const formats = helpers.formats;
+  const { formats} = helpers;
+
+  function navigateToNewPage(fips) {
+    push(`#/county/${fips}`)
+    if(updateData) {
+      updateData(fips);
+    }    
+  }
 </script>
 
 <div class="table-mobile-body">
-  {#each paginatedItems as row }
-    <div class="table-mobile-row {selectedFIPs === row['county_fips'] ? 'active' : ''}">
+  {#each paginatedItems as row, index }
+    <div class="table-mobile-row {selectedFIPs === row['county_fips'] ? 'active' : ''}"
+      onclick={() => navigateToNewPage(row['county_fips'])}
+      role="button"
+      tabindex={ index }
+    >
       <div class="table-mobile-text">{ row['county_name'] }</div>
       <div class="table-mobile-cell-half">
         <div class="table-mobile-number">
@@ -45,9 +57,14 @@
 .table-mobile-row {
   padding: 15px 0;
   border-bottom: 1px solid variables.$gray-grid;
+  cursor: pointer;
 
   &.active {
-    font-weight: 700;
+    background-color: variables.$gray-lightest;
+
+    div {
+      font-weight: 700;
+    }
   }
 }
 

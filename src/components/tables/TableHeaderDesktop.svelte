@@ -11,23 +11,19 @@
     </th>
     <th
       class="num"
-      onclick={() => sortData('median_listing_price')}
-      ontouchend={() => sortData('median_listing_price')}>
+      onclick={() => sortData('median_listing_price')}>
       <SortArrows label='Median home price for { latestMonth }' active={currentValue === 'median_listing_price'} { direction } />
     </th>
     <th class="num"
-      onclick={() => sortData('median_listing_price_yoy')}
-      ontouchend={() => sortData('median_listing_price_yoy')}>
+      onclick={() => sortData('median_listing_price_yoy')}>
       <SortArrows label='Change year-over-year' active={currentValue === 'median_listing_price_yoy'} { direction } />
     </th>
     <th class="num"
-      onclick={() => sortData('active_listing_count')}
-      ontouchend={() => sortData('active_listing_count')}>
+      onclick={() => sortData('active_listing_count')}>
       <SortArrows label='Inventory' active={currentValue === 'active_listing_count'} { direction } />
     </th>
     <th class="num"
-      onclick={() => sortData('active_listing_count_yoy')}
-      ontouchend={() => sortData('active_listing_count_yoy')}>
+      onclick={() => sortData('active_listing_count_yoy')}>
       <SortArrows label='Change year-over-year' active={currentValue === 'active_listing_count_yoy'} { direction } />
     </th>
   </tr>
