@@ -126,8 +126,7 @@
           data-upper={btn.upper}
           data-lower={btn.lower}
           class="filter-button {i === 0 ? 'filter-button-first' : ''} { selectedSize === btn.key ? 'active' : ''}"
-          onclick={ (e) => filterCountiesBySize(btn) }
-          ontouchend={ (e) => filterCountiesBySize(btn) }>
+          onclick={ (e) => filterCountiesBySize(btn) }>
             {btn.label}
         </button>
       {/each}
