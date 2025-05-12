@@ -126,7 +126,8 @@
           data-upper={btn.upper}
           data-lower={btn.lower}
           class="filter-button {i === 0 ? 'filter-button-first' : ''} { selectedSize === btn.key ? 'active' : ''}"
-          onclick={ (e) => filterCountiesBySize(btn) }>
+          onclick={ (e) => filterCountiesBySize(btn) }
+          ontouchend={ (e) => filterCountiesBySize(btn) }>
             {btn.label}
         </button>
       {/each}
@@ -135,12 +136,12 @@
   {#if width >= 550}
   <table>
     <TableHeaderDesktop { sortData } { currentValue } { direction } { latestMonth } />
-    <TableBodyDesktop { paginatedItems } />
+    <TableBodyDesktop { paginatedItems } selectedFIPs={ null } />
   </table>
   {:else}
   <div class="container-table-mobile">
     <TableHeaderMobile { sortData } { currentValue } { direction } />
-    <TableBodyMobile { paginatedItems } />
+    <TableBodyMobile { paginatedItems } selectedFIPs={ null } />
   </div>
   {/if}
   <div class="table-pagination">

@@ -1,5 +1,5 @@
 <script>
-  export let paginatedItems;
+  export let paginatedItems, selectedFIPs;
 
   import helpers from "../../lib/js/helpers";
 
@@ -8,7 +8,7 @@
 
 <div class="table-mobile-body">
   {#each paginatedItems as row }
-    <div class="table-mobile-row">
+    <div class="table-mobile-row {selectedFIPs === row['county_fips'] > 'active' : ''}">
       <div class="table-mobile-text">{ row['county_name'] }</div>
       <div class="table-mobile-cell-half">
         <div class="table-mobile-number">
@@ -45,6 +45,10 @@
 .table-mobile-row {
   padding: 15px 0;
   border-bottom: 1px solid variables.$gray-grid;
+
+  &.active {
+    font-weight: 700;
+  }
 }
 
 .table-mobile-cell-half {

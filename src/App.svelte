@@ -30,7 +30,7 @@
   @use './lib/style/variables';
   h1 {
     font-size: 40px;
-    margin-bottom: 0;
+    margin: 0;
   }
 
   .project-wrapper {
