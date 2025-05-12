@@ -17,7 +17,7 @@ An interactive data dashboard, visualizing housing prices and inventory across U
 [See the project board for features t/k](https://github.com/users/katiemarriner/projects/1/views/1)
 
 ## How to format the data
-1. Download data from [Realtor.com](https://www.realtor.com/research/data/). Monthly inventory -> Historical data -> County. And Weekly inventory -> National (View US Data)
+1. Download data from [Realtor.com](https://www.realtor.com/research/data/). Monthly inventory -> Historical data -> County. And Weekly inventory -> National (View US Data) into `tasks/data`
 2. `cd tasks/`
 3. [Make sure you have pipenv installed](https://pipenv.pypa.io/en/latest/)
 4. `pipenv install`
