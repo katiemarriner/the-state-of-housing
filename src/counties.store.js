@@ -4,7 +4,7 @@ export const dataStore = writable({meta: null, national: null, state: null});
 
 const url = import.meta.env.BASE_URL;
 export async function loadData () {
-  const res = await fetch(`${url}/public/data/fips.json`);
+  const res = await fetch(`${url}/data/fips.json`);
   const json = await res.json();
   dataStore.update(store => ({
     ...store,
@@ -13,7 +13,7 @@ export async function loadData () {
 }
 
 export async function loadNationalData() {
-  const res = await fetch(`${url}/public/data/national.json`);
+  const res = await fetch(`${url}/data/national.json`);
   const json = await res.json();
   dataStore.update(store => ({
     ...store,
@@ -22,7 +22,7 @@ export async function loadNationalData() {
 }
 
 export async function loadStateData(fips) {
-  const urls = [`${url}/public/data/latest.json`, `${url}/public/data/states.json`]
+  const urls = [`${url}/data/latest.json`, `${url}/data/states.json`]
   const res = await Promise.all(urls.map(url2 => {
     return fetch(url2);
   }));
