@@ -23,6 +23,7 @@
   <footer>
     <p>Source: <a href="https://www.realtor.com/research/data/">Realtor.com</a></p>
     <p>Notes: Counties with 10 or fewer active listings for at least one month in the past six years excluded.</p>
+    <p><a href="https://github.com/katiemarriner/the-state-of-housing">Contribute on GitHub</a></p>
   </footer>
   </div>
 
