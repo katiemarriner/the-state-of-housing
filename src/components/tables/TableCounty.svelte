@@ -8,7 +8,7 @@
 
   let width = $state(0);
 
-  let sortedData = $state(dataState.data);
+  let sortedData = $state(dataState);
   let selectedData = $state(sortedData);
 
   let currentValue = $state('median_listing_price');
@@ -29,7 +29,7 @@
       }
     });
   }
-  console.log(latestMonth)
+
   sortData(currentValue, 'desc');
 </script>
 

@@ -3,7 +3,7 @@
 
   import { onMount } from 'svelte'; 
   import { fade } from 'svelte/transition'
-  import { loadNationalData, loadStateData, dataNational, dataState, resetData } from '../counties.store';
+  import { loadNationalData, loadStateData, dataNational, dataState, dataLatest, resetData, loadLatestData } from '../counties.store';
   
   import BigNumbers from '../components/BigNumbers.svelte';
   import BarChart from '../components/charts/BarChart.svelte';
@@ -15,9 +15,10 @@
   const { time } = helpers;
   
   const url = import.meta.env.BASE_URL;
-  let data, latestMonth;
+  let data, dataHouseholds, latestMonth;
   $: national = $dataNational;
   $: stateData = $dataState;
+  $: latest = $dataLatest;
 
   async function updateData(fips) {
     fips = fips || params.id;
@@ -26,9 +27,19 @@
     data = await res.json();
 
     latestMonth = time.monthYearFormat(time.parseTime(data.latest['latest_month']));
+    
+    await loadLatestData();
+    await loadNationalData();
+    await loadStateData(fips.substring(0, 2));
 
-    loadNationalData();
-    loadStateData(fips.substring(0, 2));
+    // Get similar household sizes by sorting and getting the 15 higher and 15 lower
+    const sortedLatest = latest.sort((a, b) => {
+      return a['households'] - b['households'];
+    });
+    const householdIndex = sortedLatest.map(d => d['county_fips']).indexOf(params.id);
+    dataHouseholds = sortedLatest.filter((d, index) => {
+      return (householdIndex <= index + 15) && (householdIndex > index - 15);
+    });
   }
 
   onMount(updateData);
@@ -41,6 +52,10 @@
     bottom: 10,
     left: 0
   }
+
+  $: selectedComparison = 'state';
+  // $: selectedData = stateData && selectedComparison === 'state' ? stateData.data : dataHouseholds;
+  // $: console.log(selectedComparison, selectedData)
 </script>
 
 {#if national && stateData && data}
@@ -93,8 +108,11 @@
     </div>
   </div>
   <div class="container-county-table">
-    <h3>Compare to counties in { stateData.state_name }</h3>
-    <TableCounty { updateData } dataState={ stateData } selectedFIPs={ params.id } { latestMonth } />
+    <h3>Compare to counties 
+      <button onclick={() => selectedComparison = 'state'}>in { stateData.state_name }</button>
+      <button onclick={() => selectedComparison = 'household'}>to similar households.</button>
+    </h3>
+    <TableCounty { updateData } dataState={ stateData.data } selectedFIPs={ params.id } { latestMonth } />
   </div>
 {/if}
 
