@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { loadData, dataMeta } from './../counties.store.js';
+  import { loadMeta, dataMeta, loadLatestData, dataLatest, loadNationalData, dataNational } from './../counties.store.js';
 
   import Search from "../components/Search.svelte";
   import TableMetrics from '../components/tables/TableMetrics.svelte';
@@ -9,35 +9,35 @@
   import BarChart from '../components/charts/BarChart.svelte';
   import ExplanationText from '../components/ExplanationText.svelte';
 
+  import helpers from '../lib/js/helpers.js';
+
+  const { time } = helpers;
+
   $: width = null;
   $: height = width / 2;
 
-  $: countiesMeta = $dataMeta;
-  
-  const url = import.meta.env.BASE_URL;
-  let dataLatest, dataNational, dataStates;
-  onMount(async () => {
-    const urls = [`${url}/data/latest.json`, `${url}/data/national.json`, `${url}/data/states.json`]
-    const resAll = await Promise.all(urls.map(loc => {
-      return fetch(loc).then(res => {
-        return res.json()
-      })
-    }));
-    dataLatest = resAll[0];
-    dataNational = resAll[1];
-    dataStates = resAll[2];
+  $: latest = $dataLatest;
+  $: meta = $dataMeta;
+  $: national = $dataNational;
+  $: latestMonth = null;
+  async function updateData() {
+    await loadMeta();
+    await loadLatestData();
+    await loadNationalData();
+    
+    latestMonth = time.monthYearFormat(time.parseTime(national.latest['month_date']));
+  }
 
-    loadData();
-  });
+  onMount(updateData);
 </script>
 
-{#if dataLatest}
+{#if latest && meta && national}
   <h2>National</h2>
-  <ExplanationText data={ dataNational } />
+  <ExplanationText data={ national } />
   <div class="container-national" in:fade={{duration: 500}}>
     <div class="container-national-chart national-price" bind:clientWidth={ width }>
       <BigNumbers
-        data={ dataNational }
+        data={ national }
         metricKey="median_listing_price"
         label="Median listing price"
         labelSub=""
@@ -47,7 +47,7 @@
         negativeValue="positive"
         />
       <BarChart
-        data={ dataNational }
+        data={ national }
         metricKey="median_listing_price"
         { width }
         { height }
@@ -59,7 +59,7 @@
     </div>
     <div class="container-national-chart national-inventory">
       <BigNumbers
-        data={ dataNational }
+        data={ national }
         metricKey="active_listing_count"
         label="Inventory"
         labelSub="Active listings for"
@@ -69,7 +69,7 @@
         negativeValue="negative"
         />
       <BarChart
-        data={ dataNational }
+        data={ national }
         metricKey="active_listing_count"
         { width }
         { height }
@@ -81,8 +81,8 @@
     </div>
   </div>
   <h2>Search for your county</h2>
-  <Search { countiesMeta } />
-  <TableMetrics { dataLatest } { dataStates } />
+  <Search countiesMeta={ meta.counties } />
+  <TableMetrics dataLatest={ latest } dataStates={ meta.states } { latestMonth } />
 {/if}
 
 <style lang="scss">

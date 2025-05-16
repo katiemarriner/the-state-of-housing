@@ -1,5 +1,5 @@
 <script>
-  let { dataState, selectedFIPs, updateData } = $props();
+  let { dataState, selectedFIPs, updateData, latestMonth } = $props();
 
   import TableBodyDesktop from "./TableBodyDesktop.svelte";
   import TableHeaderDesktop from "./TableHeaderDesktop.svelte";
@@ -8,16 +8,11 @@
 
   let width = $state(0);
 
-  let sortedData = dataState.data
-    .filter(d => {
-      return d.active_listing_count > 10;
-    });
-  
+  let sortedData = $state(dataState.data);
   let selectedData = $state(sortedData);
 
   let currentValue = $state('median_listing_price');
   let direction = $state('desc');
-  let latestMonth;
 
   function sortData(sortValue, dir) {
     currentValue = sortValue;
@@ -34,7 +29,7 @@
       }
     });
   }
-
+  console.log(latestMonth)
   sortData(currentValue, 'desc');
 </script>
 

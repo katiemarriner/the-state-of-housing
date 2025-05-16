@@ -10,8 +10,12 @@
   import ExplanationTextCounty from '../components/ExplanationTextCounty.svelte';
   import TableCounty from '../components/tables/TableCounty.svelte';
 
+  import helpers from '../lib/js/helpers';
+
+  const { time } = helpers;
+  
   const url = import.meta.env.BASE_URL;
-  let data
+  let data, latestMonth;
   $: national = $dataNational;
   $: stateData = $dataState;
 
@@ -20,6 +24,8 @@
     resetData();
     const res = await fetch(`${url}/data/counties/${fips}.json`);
     data = await res.json();
+
+    latestMonth = time.monthYearFormat(time.parseTime(data.latest['latest_month']));
 
     loadNationalData();
     loadStateData(fips.substring(0, 2));
@@ -87,8 +93,8 @@
     </div>
   </div>
   <div class="container-county-table">
-    <h3>Compare to counties in { stateData.name }</h3>
-    <TableCounty { updateData } dataState={ stateData } selectedFIPs={ params.id } />
+    <h3>Compare to counties in { stateData.state_name }</h3>
+    <TableCounty { updateData } dataState={ stateData } selectedFIPs={ params.id } { latestMonth } />
   </div>
 {/if}
 

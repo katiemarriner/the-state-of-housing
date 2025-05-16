@@ -5,6 +5,8 @@
   import { timeParse, timeFormat } from 'd3-time-format';
   import { scaleLinear, scaleBand } from 'd3-scale';
   import { line } from 'd3-shape';
+
+  import helpers from '../../lib/js/helpers';
   
   import XAxis from './XAxis.svelte';
 
@@ -27,21 +29,24 @@
   $: innerWidth = width - margin.left - margin.right;
   $: innerHeight = height - margin.top - margin.bottom;
 
-  $: latest = data[metricKey][0];
+  let dataSorted = helpers.sortByDate(data[metricKey]);
+  let dataSortedRolling = helpers.sortByDate(data[`${metricKey}_rolling`]);
+
+  $: latest = dataSorted[0];
   
-  data[metricKey] = data[metricKey].filter(d => {
+  dataSorted = dataSorted.filter(d => {
     return d[0] > '2019-01-01'
   });
 
-  data[`${metricKey}_rolling`] = data[`${metricKey}_rolling`].filter(d => {
+  dataSortedRolling = dataSortedRolling.filter(d => {
     return d[0] > '2019-01-01';
   });
 
-  $: maxPrice = Math.max(...data[metricKey].map(d => {
+  $: maxPrice = Math.max(...dataSorted.map(d => {
     return d[1];
   }));
   
-  $: dateRange = data[metricKey].map(d => {
+  $: dateRange = dataSorted.map(d => {
     return d[0];
   }).reverse();
 
@@ -71,7 +76,7 @@
     </div>
     <svg { width } { height } >
       <g class="g-bars">
-        {#each data[metricKey] as d, i}
+        {#each dataSorted as d, i}
           <rect
             x={xScale(d[0])}
             width={bandWidth}
@@ -82,7 +87,7 @@
         {/each}
       </g>
       <g class="g-line" transform="translate({bandWidth / 2}, 0)">
-        <path d={movingLine(data[`${metricKey}_rolling`])} class="line-{color}"/>
+        <path d={movingLine(dataSortedRolling)} class="line-{color}"/>
       </g>
       {#if showAnnotation}
         <g 
