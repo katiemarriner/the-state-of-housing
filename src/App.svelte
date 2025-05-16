@@ -21,7 +21,7 @@
   </main>
 
   <footer>
-    <p>Source: <a href="https://www.realtor.com/research/data/">Realtor.com</a></p>
+    <p>Source: <a href="https://www.realtor.com/research/data/">Realtor.com</a>, American Community Survey 5-Year Estimates (2023)</p>
     <p>Notes: Counties with 10 or fewer active listings for at least one month in the past six years excluded.</p>
   </footer>
   </div>
