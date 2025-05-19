@@ -1,9 +1,23 @@
 <script>
   import Router from 'svelte-spa-router';
   import routes from './routes';
+  import { onMount } from 'svelte';
   import { location } from 'svelte-spa-router';
 
+  import helpers from './lib/js/helpers';
+  import { initializeSharedData } from './counties.store';
+
   import NationalBanner from './components/NationalBanner.svelte';
+  const { time } = helpers;
+
+  const url = import.meta.env.BASE_URL;
+  onMount(async () => {
+    try {
+      await initializeSharedData();
+    } catch(error) {
+      console.error('Initialization error in App.svelte:', error);
+    }
+  });
 </script>
 
 <div class="project-wrapper">

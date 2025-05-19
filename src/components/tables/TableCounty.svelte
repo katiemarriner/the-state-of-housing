@@ -1,18 +1,20 @@
 <script>
-  let { dataState, selectedFIPs, updateData, latestMonth } = $props();
+  export let tableData, selectedFIPs, updateData, latestMonth;
 
   import TableBodyDesktop from "./TableBodyDesktop.svelte";
   import TableHeaderDesktop from "./TableHeaderDesktop.svelte";
   import TableBodyMobile from "./TableBodyMobile.svelte";
   import TableHeaderMobile from "./TableHeaderMobile.svelte";
 
-  let width = $state(0);
+  $: selectedComparison = 'states';
 
-  let sortedData = $state(dataState);
-  let selectedData = $state(sortedData);
+  $: width = 300;
 
-  let currentValue = $state('median_listing_price');
-  let direction = $state('desc');
+  $: filteredData = null;
+  $: selectedData = null;
+  
+  $: currentValue = 'median_listing_price';
+  $: direction = 'desc';
 
   function sortData(sortValue, dir) {
     currentValue = sortValue;
@@ -21,7 +23,7 @@
     } else {
       direction = direction === 'asc' ? 'desc' : 'asc';
     }
-    selectedData = selectedData.sort((a, b) => {
+    selectedData = filteredData.sort((a, b) => {
       if(direction === 'desc') {
         return b[sortValue] - a[sortValue];
       } else {
@@ -30,9 +32,20 @@
     });
   }
 
-  sortData(currentValue, 'desc');
+  function changeTableView(value) {
+    selectedComparison = value;
+    filteredData = tableData[value]
+    sortData(currentValue, direction);
+  }
+
+  $: changeTableView(selectedComparison);
+  $: sortData(currentValue, 'desc');
 </script>
 
+<h3>Compare to counties 
+  <button onclick={() => changeTableView('states')}>in </button>
+  <button onclick={() => changeTableView('households')}>to similar households.</button>
+</h3>
 <div class="container-table" bind:clientWidth={ width }>
   {#if width >= 550}
     <table>

@@ -3,7 +3,6 @@
   import helpers from './../lib/js/helpers';
 
   const formats = helpers.formats;
-
   // NOTE: find a better way to do this. Data may not always be sorted descending
   const currentMonth = dataNational.latest['month_date'];
   let medianListing = {

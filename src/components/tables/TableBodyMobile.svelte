@@ -1,5 +1,5 @@
 <script>
-  let { paginatedItems, selectedFIPs, updateData } = $props();
+  export let paginatedItems, selectedFIPs, updateData;
 
   import { push } from 'svelte-spa-router';
   import helpers from './../../lib/js/helpers';
@@ -10,7 +10,7 @@
     push(`#/county/${fips}`)
     if(updateData) {
       updateData(fips);
-    }    
+    }
   }
 </script>
 

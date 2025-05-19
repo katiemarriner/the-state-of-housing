@@ -24,7 +24,7 @@
 
   let changeActiveListings = upOrDown('active_listing_count');
   let changeMedianListing = upOrDown('median_listing_price');
-
+  
 </script>
 
 <p>The national housing market shows { changeMedianListing } the <span class="purple">median listing price</span> of homes year-over-year. The latest month's median is <span class="purple">{ currency(data.latest['median_listing_price'] )}</span>, which is { diffMedianListing } the 12-month moving average, <span class="purple">{ currency(data.latest['median_listing_price_rolling']) }</span>.</p>

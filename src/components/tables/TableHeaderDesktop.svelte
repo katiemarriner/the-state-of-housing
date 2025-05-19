@@ -1,5 +1,5 @@
 <script>
-  let { sortData, currentValue, direction, latestMonth } = $props();
+  export let sortData, currentValue, direction, latestMonth;
 
   import SortArrows from "./SortArrows.svelte";
 </script>

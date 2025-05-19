@@ -1,20 +1,16 @@
-<script>
-  import { onMount } from "svelte";
-  import { dataNational, loadNationalData } from "../counties.store";
+<!-- <script>
+  import { nationalData } from "../counties.store";
   import helpers from "../lib/js/helpers";
   import { timeYear } from 'd3-time';
 
   const { formats, time } = helpers;
 
-  $: national = $dataNational;
+  $: national = $nationalData;
 
   function getOneYearAgo(date_) {
     return time.monthYearFormat(timeYear.offset(time.parseTime(date_), -1));
   }
 
-  onMount(async () => {
-    loadNationalData();
-  });
 </script>
 
 {#if national}
@@ -43,4 +39,4 @@
     text-transform: uppercase;
     font-weight: 700;
   }
-</style>
+</style> -->
