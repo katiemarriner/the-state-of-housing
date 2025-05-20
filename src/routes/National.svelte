@@ -2,6 +2,7 @@
   import { fade } from 'svelte/transition';
 
   import { dataStoreCommon } from '../counties.store';
+  import helpers from '../lib/js/helpers';
 
   import Search from "../components/Search.svelte";
   import TableMetrics from '../components/tables/TableMetrics.svelte';
@@ -9,6 +10,8 @@
   import BarChart from '../components/charts/BarChart.svelte';
   import ExplanationText from '../components/ExplanationText.svelte';
 
+  const { time } = helpers;
+  
   $: width = null;
   $: height = width / 2;
 
@@ -33,6 +36,7 @@
         color="purple"
         positiveValue="negative"
         negativeValue="positive"
+        latestDate={ time.monthYearFormat(time.parseTime(national.latest['month_date'])) }
         />
       <BarChart
         data={ national }
@@ -55,6 +59,7 @@
         color="orange"
         positiveValue="positive"
         negativeValue="negative"
+        latestDate={ time.monthYearFormat(time.parseTime(national.latest['month_date'])) }
         />
       <BarChart
         data={ national }

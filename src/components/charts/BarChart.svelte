@@ -29,10 +29,10 @@
   $: innerWidth = width - margin.left - margin.right;
   $: innerHeight = height - margin.top - margin.bottom;
 
-  let dataSorted = helpers.sortByDate(data[metricKey]);
-  let dataSortedRolling = helpers.sortByDate(data[`${metricKey}_rolling`]);
+  let dataSorted = helpers.sortByDate([...data[metricKey]]);
+  let dataSortedRolling = helpers.sortByDate([...data[`${metricKey}_rolling`]])
 
-  $: latest = dataSorted[0];
+  $: latest = dataSorted[dataSorted.length - 1];
   
   dataSorted = dataSorted.filter(d => {
     return d[0] > '2019-01-01'
@@ -48,7 +48,7 @@
   
   $: dateRange = dataSorted.map(d => {
     return d[0];
-  }).reverse();
+  });
 
   $: xScale = scaleBand()
     .domain(dateRange)
@@ -82,7 +82,7 @@
             width={bandWidth}
             height={innerHeight - yScale(d[1])}
             y={yScale(d[1])}
-            class="{i === 0 ? `dark-${color}` : color }"
+            class="{i === dataSorted.length - 1 ? `dark-${color}` : color }"
           />
         {/each}
       </g>

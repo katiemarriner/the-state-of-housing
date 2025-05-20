@@ -32,7 +32,7 @@
   $: latestDate = null;
 
   $: dataReady = !isLoading && county && national && latest && selectedState && latestDate;
-  let hasRun = false;
+
   async function updateData() {
     await loadPageData(params.id);
     
@@ -88,6 +88,7 @@
         color="purple"
         positiveValue="negative"
         negativeValue="positive"
+        { latestDate }
       />
       <BarChart
         data={ county }
@@ -110,6 +111,7 @@
         color="orange"
         positiveValue="positive"
         negativeValue="negative"
+        { latestDate }
       />
       <BarChart
         data={ county }
