@@ -12,7 +12,6 @@ export const dataStoreCommon = writable({
   metaCounties: null,
   // state name and fips
   metaStates: null,
-  latestDate: null,
   loading: false,
   error: null
 });
@@ -44,7 +43,6 @@ export async function loadCommonData() {
 
     dataStoreCommon.set({
       historicalNational, latestCounties, metaCounties, metaStates,
-      latestDate: historicalNational['latest']['month_date'],
       loading: false,
       error: null
     });

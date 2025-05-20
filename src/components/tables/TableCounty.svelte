@@ -44,7 +44,7 @@
 
 <h3>Compare to counties
 <button name="compareCounties" class="inline {selectedComparison === 'states' ? 'active' : ''}" onclick={() => changeTableView('states')}>in { selectedState['state_name'] }</button>
-<button name="compareCounties" class="inline {selectedComparison === 'households' ? 'active' : ''}" onclick={() => changeTableView('households')}>to similar households.</button>
+<button name="compareCounties" class="inline {selectedComparison === 'households' ? 'active' : ''}" onclick={() => changeTableView('households')}>similar in size.</button>
 </h3>
 <div class="container-table" bind:clientWidth={ width }>
   {#if width >= 550}
@@ -79,7 +79,7 @@
     background: none;
     border: none;
     font-size: inherit;
-    opacity: 0.5;
+    opacity: 0.25;
     line-height: initial;
     padding: 0;
   }
@@ -91,6 +91,6 @@
     text-decoration-color: variables.$teal-text;
     color: variables.$gray-darkest;
     opacity: 1;
-    font-weight: 700;
+
   }
 </style>

@@ -1,7 +1,6 @@
 <script>
   export let params = {};
 
-  import { onDestroy, onMount, tick } from 'svelte'; 
   import { fade } from 'svelte/transition'
 
   import helpers from '../lib/js/helpers';
@@ -13,39 +12,29 @@
   import ExplanationTextCounty from '../components/ExplanationTextCounty.svelte';
   import TableCounty from '../components/tables/TableCounty.svelte';
   
-  const { time, formats } = helpers;
+  const { time } = helpers;
 
   // store data
   $: national = $dataStoreCombined.shared?.historicalNational;
   $: county = $dataStoreCombined.route?.dataCounty;
   $: latest = $dataStoreCombined.shared.latestCounties;
   $: metaState = $dataStoreCombined.shared?.metaStates;
-  $: latestDate = time.monthYearFormat(time.parseTime($dataStoreCombined.shared?.latestDate));
   $: isLoading = $dataStoreCombined?.loading;
 
-  let currentCountyId = params.id;
-  let countyName = null;
   $: stateFIPs = params.id.substring(0, 2);
+
   // in-browser data formatting
   $: tableData = {
     states: null,
     households: null
   };
   $: selectedState = null
+  $: latestDate = null;
 
-  $: dataReady = !isLoading && county && national && latest && selectedState;
+  $: dataReady = !isLoading && county && national && latest && selectedState && latestDate;
 
   async function updateData() {
-    resetPageData();
-    if (params.id !== currentCountyId) {
-      console.log(`County ID changed: ${currentCountyId} -> ${params.id}`);
-      currentCountyId = params.id;
-      await loadPageData(params.id);
-    } else {
-      await loadPageData(params.id);
-    }
-    
-    countyName = county['county_name'];
+    await loadPageData(params.id);
     
     if(latest) {
       tableData['states'] = latest.filter(d => {
@@ -62,19 +51,19 @@
       });
     }
 
+    if(national) {
+      latestDate = time.monthYearFormat(time.parseTime(national['latest']['month_date']));
+    }
+
     if(metaState) {
       // note: replace this with a way to call state data from the store
       selectedState = metaState.find(d => d['fips'] === stateFIPs);
     }
-
   }
-  onMount(updateData);
-  tick().then(() => {
-    resetPageData();
-    updateData();
-  });
 
-  $: console.log(currentCountyId)
+  $: if(latest && national && metaState) {
+    updateData();
+  }
 
   $: width = 0;
   $: height = width / 2;
@@ -82,7 +71,7 @@
     top: 25,
     right: 30,
     bottom: 10,
-    left: 0
+    left: 0 
   }
 </script>
 
@@ -135,7 +124,7 @@
     </div>
   </div>
   <div class="container-county-table">
-    <TableCounty { updateData } { tableData } { selectedState } selectedFIPs={ params.id } latestMonth={ latestDate } />
+    <TableCounty { tableData } { selectedState } selectedFIPs={ params.id } latestMonth={ latestDate } />
   </div>
 {/if}
 

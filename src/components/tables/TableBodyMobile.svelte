@@ -1,6 +1,7 @@
 <script>
   export let paginatedItems, selectedFIPs;
 
+  import { blur } from 'svelte/transition';
   import { push } from 'svelte-spa-router';
   import helpers from './../../lib/js/helpers';
   import { loadPageData, resetPageData } from '../../counties.store';
@@ -17,40 +18,43 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="table-mobile-body">
   {#each paginatedItems as row, index}
-    <div class="table-mobile-row {selectedFIPs === row['county_fips'] ? 'active' : ''}"
-      onclick={() => navigateToNewPage(row['county_fips'])}
-      tabindex={ index }
-      role="button"
-    >
-      <div class="table-mobile-text">{ row['county_name'] }</div>
-      <div class="table-mobile-row-contents">
-        <div class="table-mobile-body-half">
-          <div class="table-mobile-number">
-            <div class="label-number">Median listing price</div>
-            <div class="num">{ formats.currency(row.median_listing_price) }</div>
+    {#key row['county_fips']}
+      <div class="table-mobile-row {selectedFIPs === row['county_fips'] ? 'active' : ''}"
+        onclick={() => navigateToNewPage(row['county_fips'])}
+        tabindex={ index }
+        role="button"
+        in:blur
+      >
+        <div class="table-mobile-text">{ row['county_name'] }</div>
+        <div class="table-mobile-row-contents">
+          <div class="table-mobile-body-half">
+            <div class="table-mobile-number">
+              <div class="label-number">Median listing price</div>
+              <div class="num">{ formats.currency(row.median_listing_price) }</div>
+            </div>
+            <div class="table-mobile-number">
+              <div class="label-number">Change year-over-year</div>
+              <div class="num {row.median_listing_price_yoy > 0 ? 'pink' : row.median_listing_price_yoy < 0 ? 'green' : ''}">
+                <span class="{arrows.classes(row.median_listing_price_yoy, 'negative')}"></span>
+                { formats.percent(Math.abs(row.median_listing_price_yoy)) }</div>
+            </div>
           </div>
-          <div class="table-mobile-number">
-            <div class="label-number">Change year-over-year</div>
-            <div class="num {row.median_listing_price_yoy > 0 ? 'pink' : row.median_listing_price_yoy < 0 ? 'green' : ''}">
-              <span class="{arrows.classes(row.median_listing_price_yoy, 'negative')}"></span>
-              { formats.percent(Math.abs(row.median_listing_price_yoy)) }</div>
-          </div>
-        </div>
-        <div class="table-mobile-body-half">
-          <div class="table-mobile-number">
-            <div class="label-number">Inventory</div>
-            <div class="num">{ formats.number(row.active_listing_count) }</div>
-          </div>
-          <div class="table-mobile-number">
-            <div class="label-number">Change year-over-year</div>
-            <div class="num {row.active_listing_count_yoy > 0 ? 'green' : row.active_listing_count_yoy < 0 ? 'pink' : ''}">
-              <span class="{arrows.classes(row.active_listing_count_yoy)}"></span>
-              { formats.percent(Math.abs(row.active_listing_count_yoy)) }
+          <div class="table-mobile-body-half">
+            <div class="table-mobile-number">
+              <div class="label-number">Inventory</div>
+              <div class="num">{ formats.number(row.active_listing_count) }</div>
+            </div>
+            <div class="table-mobile-number">
+              <div class="label-number">Change year-over-year</div>
+              <div class="num {row.active_listing_count_yoy > 0 ? 'green' : row.active_listing_count_yoy < 0 ? 'pink' : ''}">
+                <span class="{arrows.classes(row.active_listing_count_yoy)}"></span>
+                { formats.percent(Math.abs(row.active_listing_count_yoy)) }
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    {/key}
   {/each}
 </div>
 
