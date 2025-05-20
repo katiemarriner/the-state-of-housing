@@ -12,6 +12,7 @@ export const dataStoreCommon = writable({
   metaCounties: null,
   // state name and fips
   metaStates: null,
+  latestDate: null,
   loading: false,
   error: null
 });
@@ -43,6 +44,7 @@ export async function loadCommonData() {
 
     dataStoreCommon.set({
       historicalNational, latestCounties, metaCounties, metaStates,
+      latestDate: historicalNational['latest']['month_date'],
       loading: false,
       error: null
     });
@@ -102,6 +104,15 @@ export async function loadPageData(routeID) {
     throw error;
   }
 };
+
+export function resetPageData() {
+  dataStorePage.set({
+    currentRoute: null,
+    dataCounty: null,
+    loading: false,
+    error: null
+  });
+}
 
 export function initializeSharedData() {
   try {

@@ -1,23 +1,30 @@
 <script>
   export let params = {};
 
-  import { onMount } from 'svelte'; 
+  import { onDestroy, onMount, tick } from 'svelte'; 
   import { fade } from 'svelte/transition'
 
-  import { dataStoreCombined, loadCommonData, loadPageData } from '../counties.store';
+  import helpers from '../lib/js/helpers';
+
+  import { dataStoreCombined, loadPageData, resetPageData } from '../counties.store';
   
   import BigNumbers from '../components/BigNumbers.svelte';
   import BarChart from '../components/charts/BarChart.svelte';
   import ExplanationTextCounty from '../components/ExplanationTextCounty.svelte';
   import TableCounty from '../components/tables/TableCounty.svelte';
   
+  const { time, formats } = helpers;
+
   // store data
   $: national = $dataStoreCombined.shared?.historicalNational;
   $: county = $dataStoreCombined.route?.dataCounty;
   $: latest = $dataStoreCombined.shared.latestCounties;
   $: metaState = $dataStoreCombined.shared?.metaStates;
+  $: latestDate = time.monthYearFormat(time.parseTime($dataStoreCombined.shared?.latestDate));
   $: isLoading = $dataStoreCombined?.loading;
 
+  let currentCountyId = params.id;
+  let countyName = null;
   $: stateFIPs = params.id.substring(0, 2);
   // in-browser data formatting
   $: tableData = {
@@ -29,7 +36,16 @@
   $: dataReady = !isLoading && county && national && latest && selectedState;
 
   async function updateData() {
-    await loadPageData(params.id);
+    resetPageData();
+    if (params.id !== currentCountyId) {
+      console.log(`County ID changed: ${currentCountyId} -> ${params.id}`);
+      currentCountyId = params.id;
+      await loadPageData(params.id);
+    } else {
+      await loadPageData(params.id);
+    }
+    
+    countyName = county['county_name'];
     
     if(latest) {
       tableData['states'] = latest.filter(d => {
@@ -50,8 +66,15 @@
       // note: replace this with a way to call state data from the store
       selectedState = metaState.find(d => d['fips'] === stateFIPs);
     }
+
   }
   onMount(updateData);
+  tick().then(() => {
+    resetPageData();
+    updateData();
+  });
+
+  $: console.log(currentCountyId)
 
   $: width = 0;
   $: height = width / 2;
@@ -64,10 +87,9 @@
 </script>
 
 {#if dataReady}
-  <h2 class="countyName">{county.county_name}</h2>
   <ExplanationTextCounty dataCounty={ county } dataNational={ national } />
   <div class="container-county-charts" in:fade={{duration: 500}}>
-    <div class="container-county-chart" bind:clientWidth={ width }>
+    <div class="container-county-chart" bind:clientWidth={ width } >
       <BigNumbers
         data={ county }
         metricKey="median_listing_price"
@@ -113,7 +135,7 @@
     </div>
   </div>
   <div class="container-county-table">
-    <TableCounty { updateData } { tableData } selectedFIPs={ params.id } latestMonth={ "April 2025" } />
+    <TableCounty { updateData } { tableData } { selectedState } selectedFIPs={ params.id } latestMonth={ latestDate } />
   </div>
 {/if}
 

@@ -32,6 +32,16 @@
 <style lang="scss">
   @use './../../lib/style/variables';
 
+  thead {
+    background-color: #fff;
+    position: sticky;
+    top: -2px;
+  }
+
+  thead tr {
+    border-bottom: variables.$selector-border;
+  }
+
   th {
     cursor: pointer;
     text-align: left;
@@ -51,9 +61,5 @@
     &.num {
       text-align: right;
     }
-  }
-
-  thead tr {
-    border-bottom: variables.$selector-border;
   }
 </style>

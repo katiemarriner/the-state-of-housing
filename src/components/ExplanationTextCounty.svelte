@@ -25,6 +25,7 @@
   }
 </script>
 
+<h2 class="countyName">{dataCounty['county_name']}</h2>
 <p>The <span class="purple">median listing price</span> for a home in { dataCounty['county_name'] } is {@html formatHigherLower(movingAverageMedianDiff)} the 12-month moving average, which is <span class="purple">{ formats.currency(medianListing.countyAverage )}</span>. <span class="orange">Inventory</span> is {@html formatHigherLower(movingAverageActiveDiff)} than the 12-month moving average of <span class="orange">{ formats.number(activeListing.countyAverage) } active listings</span>.</p>
 
 <style lang="scss">
