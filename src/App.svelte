@@ -1,9 +1,20 @@
 <script>
   import Router from 'svelte-spa-router';
   import routes from './routes';
+  import { onMount } from 'svelte';
   import { location } from 'svelte-spa-router';
 
+  import { initializeSharedData } from './counties.store';
+
   import NationalBanner from './components/NationalBanner.svelte';
+
+  onMount(async () => {
+    try {
+      await initializeSharedData();
+    } catch(error) {
+      console.error('Initialization error in App.svelte:', error);
+    }
+  });
 </script>
 
 <div class="project-wrapper">
@@ -22,7 +33,7 @@
 
   <footer>
     <p>Source: <a href="https://www.realtor.com/research/data/">Realtor.com</a>, American Community Survey 5-Year Estimates (2023)</p>
-    <p>Notes: Counties with 10 or fewer active listings for at least one month in the past six years excluded.</p>
+    <p>Notes: Counties with smaller levels of active inventory will have extreme changes in inventory due to a small denominator. The universe may be changed as more analysis is done. That will be noted here and in updates on GitHub</p>
   </footer>
   </div>
 

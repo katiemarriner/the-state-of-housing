@@ -1,53 +1,60 @@
 <script>
-  let { paginatedItems, selectedFIPs, updateData } = $props();
+  export let paginatedItems, selectedFIPs;
 
+  import { blur } from 'svelte/transition';
   import { push } from 'svelte-spa-router';
   import helpers from './../../lib/js/helpers';
+  import { loadPageData, resetPageData } from '../../counties.store';
 
-  const { formats} = helpers;
+  const { formats, arrows } = helpers;
 
   function navigateToNewPage(fips) {
     push(`#/county/${fips}`)
-    if(updateData) {
-      updateData(fips);
-    }    
+    resetPageData();
+    loadPageData(fips);
   }
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="table-mobile-body">
-  {#each paginatedItems as row, index }
-    <div class="table-mobile-row {selectedFIPs === row['county_fips'] ? 'active' : ''}"
-      onclick={() => navigateToNewPage(row['county_fips'])}
-      role="button"
-      tabindex={ index }
-    >
-      <div class="table-mobile-text">{ row['county_name'] }</div>
-      <div class="table-mobile-cell-half">
-        <div class="table-mobile-number">
-          <div class="label-number">Median listing price</div>
-          <div class="num">{ formats.currency(row.median_listing_price) }</div>
-        </div>
-        <div class="table-mobile-number">
-          <div class="label-number">Change year-over-year</div>
-          <div class="num {row.median_listing_price_yoy > 0 ? 'pink' : row.median_listing_price_yoy < 0 ? 'green' : ''}">
-            <span class="arrow {row.median_listing_price_yoy > 0 ? 'arrow-up-negative' : row.median_listing_price_yoy < 0 ? 'arrow-down-positive' : ''}"></span>
-            { formats.percent(Math.abs(row.median_listing_price_yoy)) }</div>
-        </div>
-      </div>
-      <div class="table-mobile-cell-half">
-        <div class="table-mobile-number">
-          <div class="label-number">Inventory</div>
-          <div class="num">{ formats.number(row.active_listing_count) }</div>
-        </div>
-        <div class="table-mobile-number">
-          <div class="label-number">Change year-over-year</div>
-          <div class="num {row.active_listing_count_yoy > 0 ? 'green' : row.active_listing_count_yoy < 0 ? 'pink' : ''}">
-            <span class="arrow {row.active_listing_count_yoy > 0 ? 'arrow-up-positive' : row.active_listing_count_yoy < 0 ? 'arrow-down-negative' : ''}"></span>
-            { formats.percent(Math.abs(row.active_listing_count_yoy)) }
+  {#each paginatedItems as row, index}
+    {#key row['county_fips']}
+      <div class="table-mobile-row {selectedFIPs === row['county_fips'] ? 'active' : ''}"
+        onclick={() => navigateToNewPage(row['county_fips'])}
+        tabindex={ index }
+        role="button"
+        in:blur
+      >
+        <div class="table-mobile-text">{ row['county_name'] }</div>
+        <div class="table-mobile-row-contents">
+          <div class="table-mobile-body-half">
+            <div class="table-mobile-number">
+              <div class="label-number">Median listing price</div>
+              <div class="num">{ formats.currency(row.median_listing_price) }</div>
+            </div>
+            <div class="table-mobile-number">
+              <div class="label-number">Change year-over-year</div>
+              <div class="num {row.median_listing_price_yoy > 0 ? 'pink' : row.median_listing_price_yoy < 0 ? 'green' : ''}">
+                <span class="{arrows.classes(row.median_listing_price_yoy, 'negative')}"></span>
+                { formats.percent(Math.abs(row.median_listing_price_yoy)) }</div>
+            </div>
+          </div>
+          <div class="table-mobile-body-half">
+            <div class="table-mobile-number">
+              <div class="label-number">Inventory</div>
+              <div class="num">{ formats.number(row.active_listing_count) }</div>
+            </div>
+            <div class="table-mobile-number">
+              <div class="label-number">Change year-over-year</div>
+              <div class="num {row.active_listing_count_yoy > 0 ? 'green' : row.active_listing_count_yoy < 0 ? 'pink' : ''}">
+                <span class="{arrows.classes(row.active_listing_count_yoy)}"></span>
+                { formats.percent(Math.abs(row.active_listing_count_yoy)) }
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    {/key}
   {/each}
 </div>
 
@@ -68,12 +75,19 @@
   }
 }
 
-.table-mobile-cell-half {
+.table-mobile-row-contents {
   display: flex;
   justify-content: space-between;
-  margin: 5px 0;
-
   font-size: 16px;
+
+  .table-mobile-body-half {
+    margin: 5px 0;
+    width: 50%;
+  }
+}
+
+.table-mobile-number {
+  margin: 7.5px 0px;
 }
 
 .label-number {
@@ -93,6 +107,10 @@
   height: 0; 
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
+
+  &.arrow-zero {
+    display: none;
+  }
 }
 
 .arrow-up-negative {

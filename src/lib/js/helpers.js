@@ -15,6 +15,15 @@ const helpers = {
     return data.sort((a, b) => {
       return helpers.time.parseTime(a[key]) - helpers.time.parseTime(b[key])
     });
+  },
+  arrows: {
+    classes: (value, up='positive') => {
+      let down = 'negative';
+      if(up === 'negative') {
+        down = 'positive';
+      }
+      return `arrow ${ value > 0 ? `arrow-up-${up}` : value < 0 ? `arrow-down-${down}` : 'arrow-zero'}`;
+    }
   }
 }
 

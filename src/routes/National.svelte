@@ -1,7 +1,7 @@
 <script>
-  import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { loadMeta, dataMeta, loadLatestData, dataLatest, loadNationalData, dataNational } from './../counties.store.js';
+
+  import { dataStoreCommon } from '../counties.store';
 
   import Search from "../components/Search.svelte";
   import TableMetrics from '../components/tables/TableMetrics.svelte';
@@ -9,29 +9,17 @@
   import BarChart from '../components/charts/BarChart.svelte';
   import ExplanationText from '../components/ExplanationText.svelte';
 
-  import helpers from '../lib/js/helpers.js';
-
-  const { time } = helpers;
-
   $: width = null;
   $: height = width / 2;
 
-  $: latest = $dataLatest;
-  $: meta = $dataMeta;
-  $: national = $dataNational;
-  $: latestMonth = null;
-  async function updateData() {
-    await loadMeta();
-    await loadLatestData();
-    await loadNationalData();
-    
-    latestMonth = time.monthYearFormat(time.parseTime(national.latest['month_date']));
-  }
-
-  onMount(updateData);
+  $: national = $dataStoreCommon.historicalNational;
+  $: latestCounties = $dataStoreCommon.latestCounties;
+  $: metaCounties = $dataStoreCommon.metaCounties;
+  $: metaStates = $dataStoreCommon.metaStates;
+  $: isLoading = $dataStoreCommon.loading;
 </script>
 
-{#if latest && meta && national}
+{#if !isLoading}
   <h2>National</h2>
   <ExplanationText data={ national } />
   <div class="container-national" in:fade={{duration: 500}}>
@@ -81,8 +69,8 @@
     </div>
   </div>
   <h2>Search for your county</h2>
-  <Search countiesMeta={ meta.counties } />
-  <TableMetrics dataLatest={ latest } dataStates={ meta.states } { latestMonth } />
+  <Search countiesMeta={ metaCounties } />
+  <TableMetrics dataLatest={ latestCounties } dataStates={ metaStates } latestMonth={ 'April 2025' } />
 {/if}
 
 <style lang="scss">
