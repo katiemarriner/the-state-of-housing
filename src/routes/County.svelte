@@ -32,16 +32,16 @@
   $: latestDate = null;
 
   $: dataReady = !isLoading && county && national && latest && selectedState && latestDate;
-
+  let hasRun = false;
   async function updateData() {
     await loadPageData(params.id);
     
     if(latest) {
-      tableData['states'] = latest.filter(d => {
+      tableData['states'] = [...latest].filter(d => {
         return d['county_fips'].substring(0, 2) === stateFIPs;
       });
 
-      tableData['households'] = latest.sort((a, b) => {
+      tableData['households'] = [...latest].sort((a, b) => {
         return a['households'] - b['households'];
       });
 
@@ -61,7 +61,7 @@
     }
   }
 
-  $: if(latest && national && metaState) {
+  $: if(latest && national && metaState && !dataReady) {
     updateData();
   }
 
