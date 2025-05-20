@@ -1,30 +1,21 @@
 <script>
-  export let dataLatest, dataStates;
+  export let dataLatest, dataStates, latestMonth;
 
   import { paginate, LightPaginationNav } from 'svelte-paginate';
-  import helpers from '../../lib/js/helpers';
   
   import TableHeaderDesktop from './TableHeaderDesktop.svelte';
   import TableBodyDesktop from './TableBodyDesktop.svelte';
   import TableHeaderMobile from './TableHeaderMobile.svelte';
   import TableBodyMobile from './TableBodyMobile.svelte';
 
-  const { time } = helpers;
-
   $: width = 0;
-  let latestMonth = time.monthYearFormat(time.parseTime(dataLatest['latest_month']));
-
   // Default sort and filter;
   let currentValue = 'median_listing_price';
   let direction = 'desc';
   let selectedSize = '';
   let selectedState = '';
 
-  let sortedData = dataLatest['data']
-    .filter(d => {
-      return d.active_listing_count > 10;
-    });
-  
+  let sortedData = dataLatest;
   let selectedData = sortedData;
 
   function sortData(sortValue, dir) {
@@ -52,7 +43,7 @@
     } else {
       selectedSize = key;
       selectedData = sortedData.filter(d => {
-        return d['population_2024'] >= lower && d['population_2024'] < upper;
+        return d['population'] >= lower && d['population'] < upper;
       });
     }
   }
@@ -115,7 +106,7 @@
       <select name="dropdown-states" bind:value={ selectedState } onchange={ filterCountiesByState }>
         <option value="" selected={selectedState === ''}>All</option>
         {#each dataStates as state}
-          <option value={state.fips} selected={selectedState === state.fips}>{state.name}</option>
+          <option value={state.fips} selected={selectedState === state.fips}>{state.state_name}</option>
         {/each}
       </select>
     </div>
