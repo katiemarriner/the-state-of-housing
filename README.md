@@ -10,6 +10,12 @@ An interactive data dashboard, visualizing housing prices and inventory across U
 #### Search for your county
 <img src="https://github.com/user-attachments/assets/c7b6ac4b-4d44-40c8-87ea-83f42b6e8e5d" width="500">
 
+## Latest Updates
+#### May 20, 2025
+- Added a new table view on county pages to show counties of similar size based on the number of households
+- Started to centralize data across the application to improve state management
+- Improved the appearance of active states on the table for sorting, filtering and data comparisons
+
 ## Tech Stack 💻
 - Frontend: Vanilla JS, D3.js, Svelte 
 - Backend: Python, pandas, Jupyter Lab (for data formatting)
