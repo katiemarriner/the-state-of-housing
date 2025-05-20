@@ -52,17 +52,17 @@ export async function loadCommonData() {
       localStorage.setItem('common-data-cache', JSON.stringify({ historicalNational, latestCounties, metaCounties, metaStates}));
       localStorage.setItem('common-data-timestamp', Date.now().toString());
     } catch(error) {
-      console.warn('Failed to cache common data:', error);
+      // console.warn('Failed to cache common data:', error);
     }
 
   } catch (error) {
-    console.error('Error loading common data:', error);
-    dataStoreCommon.update(state => ({
-      ...state,
-      loading: false,
-      error: error.message || 'Failed to load common data'
-    }));
-    throw error;
+    // console.error('Error loading common data:', error);
+    // dataStoreCommon.update(state => ({
+    //   ...state,
+    //   loading: false,
+    //   error: error.message || 'Failed to load common data'
+    // }));
+    // throw error;
   }
 };
 
@@ -93,13 +93,13 @@ export async function loadPageData(routeID) {
 
     return dataCounty;
   } catch(error) {
-    console.error('Error loading', routeID);
-    dataStorePage.update(state => ({
-      ...state,
-      loading: false,
-      error: error
-    }));
-    throw error;
+    // console.error('Error loading', routeID);
+    // dataStorePage.update(state => ({
+    //   ...state,
+    //   loading: false,
+    //   error: error
+    // }));
+    // throw error;
   }
 };
 
@@ -128,7 +128,7 @@ export function initializeSharedData() {
       }
     }
   } catch (error) {
-    console.warn('Failed to load cached common data:', error);
+    // console.warn('Failed to load cached common data:', error);
   }
 
   // if data is too old or fails to load from local storage;
