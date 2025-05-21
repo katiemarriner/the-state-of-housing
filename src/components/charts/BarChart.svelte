@@ -66,6 +66,8 @@
   
   $: yearLabels = dateRange.filter(d => d.substring(5, 7) === '07');
   $: yearTicks = dateRange.filter(d => d.substring(5, 7) === '01');
+
+  $: console.log(latest);
 </script>
 
 {#if xScale}
@@ -93,7 +95,7 @@
         <g 
           class="g-annotations"
           transform="translate({xScale(latest[0]) + (bandWidth/2)}, {margin.top})">
-          <line x1="0" x2="0" y1="0" y2="{ yScale(latest[1]) }"/>
+          <line x1="0" x2="0" y1="5" y2="{ yScale(latest[1]) - margin.top }"/>
           <text y="{-margin.top / 2}">{ monthYearFormat(parseTime(latest[0])) }</text>
           <text y="0">{ formats[formatType](latest[1]) }</text>
         </g>

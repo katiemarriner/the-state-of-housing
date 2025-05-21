@@ -32,8 +32,9 @@
   $: latestDate = null;
 
   $: dataReady = !isLoading && county && national && latest && selectedState && latestDate;
-  let hasRun = false;
+
   async function updateData() {
+    selectedState = null;
     await loadPageData(params.id);
     
     if(latest) {
