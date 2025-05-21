@@ -1,14 +1,17 @@
 <script>
   export let width, height, margin, data, metricKey, color, formatType, showAnnotation;
 
-  import { format } from 'd3-format';
-  import { timeParse, timeFormat } from 'd3-time-format';
-  import { scaleLinear, scaleBand } from 'd3-scale';
-  import { line } from 'd3-shape';
+  import { fade } from 'svelte/transition';
 
-  import helpers from '../../lib/js/helpers';
+  import { scaleLinear, scaleBand } from 'd3-scale';
+  import { range } from 'd3-array';
+  import { line } from 'd3-shape';
   
   import XAxis from './XAxis.svelte';
+
+  import helpers from '../../lib/js/helpers';
+
+  const { time, formats } = helpers;
 
   formatType = formatType || 'currency';
   margin = margin || {
@@ -18,21 +21,13 @@
     left: 0
   };
 
-  const formats = {
-    currency: format("$,"),
-    number: format(",")
-  };
-
-  const parseTime = timeParse('%Y-%m-%d');
-  const monthYearFormat = timeFormat('%B %Y');
-
   $: innerWidth = width - margin.left - margin.right;
   $: innerHeight = height - margin.top - margin.bottom;
 
   let dataSorted = helpers.sortByDate(data[metricKey]);
   let dataSortedRolling = helpers.sortByDate(data[`${metricKey}_rolling`]);
 
-  $: latest = dataSorted[0];
+  $: latest = JSON.parse(JSON.stringify(dataSorted))[0];
   
   dataSorted = dataSorted.filter(d => {
     return d[0] > '2019-01-01'
@@ -46,7 +41,7 @@
     return d[1];
   }));
   
-  $: dateRange = dataSorted.map(d => {
+  $: dateRange = JSON.parse(JSON.stringify(dataSorted)).map(d => {
     return d[0];
   }).reverse();
 
@@ -67,15 +62,26 @@
   $: yearLabels = dateRange.filter(d => d.substring(5, 7) === '07');
   $: yearTicks = dateRange.filter(d => d.substring(5, 7) === '01');
 
-  $: console.log(latest);
+  $: annotations = [latest];
+
+  $: years = range(dateRange[0].substring(0, 4), dateRange[dateRange.length - 1].substring(0, 4) + 1);
+  $: console.log(dateRange)
+  function showHoverValues(value) {
+    const hoverMonth = value[0].substring(5, 7);
+    annotations = years.map(year => {
+      return dataSorted.find(d => d[0] === `${year}-${hoverMonth}-01`);
+    }).filter(d => d !== undefined);
+  }
 </script>
 
 {#if xScale}
   <div class="container-barChart">
+    {#if annotations.length <= 1}
     <div class="container-legend">
       <div class="legend-line line-{color}"></div>
       <div class="legend-label">12-month moving average</div>
     </div>
+    {/if}
     <svg { width } { height } >
       <g class="g-bars">
         {#each dataSorted as d, i}
@@ -84,7 +90,11 @@
             width={bandWidth}
             height={innerHeight - yScale(d[1])}
             y={yScale(d[1])}
-            class="{i === 0 ? `dark-${color}` : color }"
+            class="{annotations.map(a => a[0]).indexOf(d[0]) > -1 ? `dark-${color}` : color }"
+            onmouseenter="{() => showHoverValues(d)}"
+            onmouseout="{() => annotations = [latest]}"
+            onblur="{() => annotations = [latest]}"
+            role="tooltip"
           />
         {/each}
       </g>
@@ -92,13 +102,20 @@
         <path d={movingLine(dataSortedRolling)} class="line-{color}"/>
       </g>
       {#if showAnnotation}
-        <g 
-          class="g-annotations"
-          transform="translate({xScale(latest[0]) + (bandWidth/2)}, {margin.top})">
-          <line x1="0" x2="0" y1="5" y2="{ yScale(latest[1]) - margin.top }"/>
-          <text y="{-margin.top / 2}">{ monthYearFormat(parseTime(latest[0])) }</text>
-          <text y="0">{ formats[formatType](latest[1]) }</text>
-        </g>
+        {#each annotations as annotation, index}
+          <!-- {#key index} -->
+            <g 
+              class="g-annotations"
+              transform="translate({xScale(annotation[0]) + (bandWidth/2)}, {margin.top})"
+              in:fade|global={{ duration: 1000 }}>
+              <line x1="0" x2="0" y1="5" y2="{ yScale(annotation[1]) - margin.top }"/>
+              <text y="{-margin.top / 2}">
+                { index === annotations.length - 1 ? time.monthYearFormat(time.parseTime(annotation[0])) : time.yearFormat(time.parseTime(annotation[0])) }
+              </text>
+              <text y="0">{ formats[formatType](annotation[1]) }</text>
+            </g>
+          <!-- {/key} -->
+        {/each}
       {/if}
       <XAxis xScale={xScale} { yearLabels } { margin } { yearTicks } { innerHeight }/>
       <g class="y-axis g-axis">
@@ -149,8 +166,9 @@
     }
 
     .g-bars rect {
+      cursor: crosshair;
       stroke: #fff;
-      stroke-width: 3px;
+      stroke-width: 1.5px;
 
       @media (max-width: 550px) {
         stroke-width: 0.5px;

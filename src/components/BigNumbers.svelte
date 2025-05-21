@@ -12,10 +12,12 @@
   const monthYearFormat = helpers.time.monthYearFormat;
 
   data[metricKey].reverse();
-
+console.log(data)
   $: latest = data.latest[metricKey];
   $: changeYoY = data.latest[`${metricKey}_yoy`];
-  $: latestDate = data.latest['month_date'] || data[metricKey][0][0];
+  $: latestDate = data.latest['latest_month'] ? data.latest['latest_month']
+    : data.latest['month_date'] ? data.latest['latest_month']
+    : data[metricKey][0][0];
 </script>
 
 <h3>{ label }</h3>
