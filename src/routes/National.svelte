@@ -42,7 +42,7 @@
         margin={ null }
         formatType="currency"
         color="purple"
-        showAnnotation={false}
+        showAnnotation={true}
       />
     </div>
     <div class="container-national-chart national-inventory">
@@ -64,7 +64,7 @@
         margin={ null }
         formatType="number"
         color="orange"
-        showAnnotation={false}
+        showAnnotation={true}
       />
     </div>
   </div>
