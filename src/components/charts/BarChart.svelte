@@ -24,17 +24,17 @@
   $: innerWidth = width - margin.left - margin.right;
   $: innerHeight = height - margin.top - margin.bottom;
 
-  let dataSorted = helpers.sortByDate(data[metricKey]);
-  let dataSortedRolling = helpers.sortByDate(data[`${metricKey}_rolling`]);
+  let dataSorted = helpers.sortByDate(data[metricKey], '0');
+  let dataSortedRolling = helpers.sortByDate(data[`${metricKey}_rolling`], '0');
 
   $: latest = JSON.parse(JSON.stringify(dataSorted))[0];
   
   dataSorted = dataSorted.filter(d => {
-    return d[0] > '2019-01-01'
+    return d[0] >= '2019-01-01'
   });
 
   dataSortedRolling = dataSortedRolling.filter(d => {
-    return d[0] > '2019-01-01';
+    return d[0] >= '2019-01-01';
   });
 
   $: maxPrice = Math.max(...dataSorted.map(d => {
@@ -65,7 +65,7 @@
   $: annotations = [latest];
 
   $: years = range(dateRange[0].substring(0, 4), dateRange[dateRange.length - 1].substring(0, 4) + 1);
-  $: console.log(dateRange)
+  $: console.log(annotations)
   function showHoverValues(value) {
     const hoverMonth = value[0].substring(5, 7);
     annotations = years.map(year => {
@@ -103,11 +103,11 @@
       </g>
       {#if showAnnotation}
         {#each annotations as annotation, index}
-          <!-- {#key index} -->
+          <!-- {#key Math.random()} -->
             <g 
               class="g-annotations"
               transform="translate({xScale(annotation[0]) + (bandWidth/2)}, {margin.top})"
-              in:fade|global={{ duration: 1000 }}>
+              in:fade={{ duration: 500 }}>
               <line x1="0" x2="0" y1="5" y2="{ yScale(annotation[1]) - margin.top }"/>
               <text y="{-margin.top / 2}">
                 { index === annotations.length - 1 ? time.monthYearFormat(time.parseTime(annotation[0])) : time.yearFormat(time.parseTime(annotation[0])) }
@@ -161,7 +161,7 @@
     }
 
     text {
-      font-size: 12px;
+      font-size: 10px;
       text-anchor: middle;
     }
 

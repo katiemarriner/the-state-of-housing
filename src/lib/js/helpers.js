@@ -14,7 +14,7 @@ const helpers = {
   },
   sortByDate: (data, key='month_date') => {
     return data.sort((a, b) => {
-      return helpers.time.parseTime(a[key]) - helpers.time.parseTime(b[key])
+      return helpers.time.parseTime(b[key]) - helpers.time.parseTime(a[key])
     });
   },
   arrows: {
