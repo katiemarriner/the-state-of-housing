@@ -68,6 +68,7 @@
   $: console.log(annotations)
   function showHoverValues(value) {
     const hoverMonth = value[0].substring(5, 7);
+    annotations = [];
     annotations = years.map(year => {
       return dataSorted.find(d => d[0] === `${year}-${hoverMonth}-01`);
     }).filter(d => d !== undefined);
@@ -101,26 +102,22 @@
       <g class="g-line" transform="translate({bandWidth / 2}, 0)">
         <path d={movingLine(dataSortedRolling)} class="line-{color}"/>
       </g>
-      {#if showAnnotation}
-        {#each annotations as annotation, index}
-          <!-- {#key Math.random()} -->
+      {#each annotations as annotation, index}
+        {#if showAnnotation}
             <g 
               class="g-annotations"
-              transform="translate({xScale(annotation[0]) + (bandWidth/2)}, {margin.top})"
-              in:fade={{ duration: 500 }}>
+              transform="translate({xScale(annotation[0]) + (bandWidth/2)}, {margin.top})">
+              <rect x="-25" y="-24" width="50" height="24" style="fill:#fff;"/>
               <line x1="0" x2="0" y1="5" y2="{ yScale(annotation[1]) - margin.top }"/>
               <text y="{-margin.top / 2}">
                 { index === annotations.length - 1 ? time.monthYearFormat(time.parseTime(annotation[0])) : time.yearFormat(time.parseTime(annotation[0])) }
               </text>
               <text y="0">{ formats[formatType](annotation[1]) }</text>
             </g>
-          <!-- {/key} -->
-        {/each}
-      {/if}
+        {/if}
+      {/each}
       <XAxis xScale={xScale} { yearLabels } { margin } { yearTicks } { innerHeight }/>
-      <g class="y-axis g-axis">
-
-      </g>
+      <g class="y-axis g-axis"></g>
     </svg>
   </div>
   {/if}
