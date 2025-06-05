@@ -81,7 +81,7 @@
   <div class="container-county-charts" in:fade={{duration: 500}}>
     <div class="container-county-chart" bind:clientWidth={ width } >
       <BigNumbers
-        data={ county }
+        data={ county['latest'] }
         metricKey="median_listing_price"
         label="Median home price"
         labelSub=""
@@ -103,7 +103,7 @@
     </div>
     <div class="container-county-chart">
       <BigNumbers
-        data={ county }
+        data={ county['latest'] }
         metricKey="active_listing_count"
         label="Inventory"
         labelSub="Active listings"
