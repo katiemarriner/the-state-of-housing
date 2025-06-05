@@ -6,18 +6,22 @@
   formatType = formatType || 'currency';
   positiveValue = positiveValue || 'positive';
   negativeValue = negativeValue || 'negative';
+  
+  const { formats, time } = helpers;
 
-  const formats = helpers.formats;
+  $: latest = data[metricKey];
+  $: changeYoY = data[`${metricKey}_yoy`];
+  $: latestDate = data['latest_month'] ? data['latest_month']
+    : data['month_date'];
 
-  $: latest = data.latest[metricKey];
-  $: changeYoY = data.latest[`${metricKey}_yoy`];
+  console.log(data);
 </script>
 
 <h3>{ label }</h3>
 <div class="container-bigNumbers">
   <div class="container-label">
     <div class="bigNumber currency {color}">{formats[formatType](latest)}</div>
-    <div class="label">{ labelSub } {latestDate}</div>
+    <div class="label">{ labelSub } {time.monthYearFormat(time.parseTime(latestDate))}</div>
   </div>
   <div class="container-label">
     <div class="mediumNumber change {changeYoY > 0 ? positiveValue : changeYoY < 0 ? negativeValue : ''}">

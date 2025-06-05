@@ -9,7 +9,8 @@ const helpers = {
   },
   time: {
     parseTime: timeParse('%Y-%m-%d'),
-    monthYearFormat: timeFormat('%B %Y')
+    monthYearFormat: timeFormat('%B %Y'),
+    yearFormat: timeFormat('%Y')
   },
   sortByDate: (data, key='month_date') => {
     return data.sort((a, b) => {

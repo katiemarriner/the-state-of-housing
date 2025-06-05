@@ -28,7 +28,7 @@
   <div class="container-national" in:fade={{duration: 500}}>
     <div class="container-national-chart national-price" bind:clientWidth={ width }>
       <BigNumbers
-        data={ national }
+        data={ national['latest'] }
         metricKey="median_listing_price"
         label="Median listing price"
         labelSub=""
@@ -46,12 +46,12 @@
         margin={ null }
         formatType="currency"
         color="purple"
-        showAnnotation={false}
+        showAnnotation={true}
       />
     </div>
     <div class="container-national-chart national-inventory">
       <BigNumbers
-        data={ national }
+        data={ national['latest'] }
         metricKey="active_listing_count"
         label="Inventory"
         labelSub="Active listings for"
@@ -69,7 +69,7 @@
         margin={ null }
         formatType="number"
         color="orange"
-        showAnnotation={false}
+        showAnnotation={true}
       />
     </div>
   </div>
