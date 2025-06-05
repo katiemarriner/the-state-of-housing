@@ -19,10 +19,11 @@
   $: latestCounties = $dataStoreCommon.latestCounties;
   $: metaCounties = $dataStoreCommon.metaCounties;
   $: metaStates = $dataStoreCommon.metaStates;
+  $: latestDate = isLoading === false ? time.monthYearFormat(time.parseTime(national.latest['month_date'])) : null;
   $: isLoading = $dataStoreCommon.loading;
 </script>
 
-{#if !isLoading}
+{#if !isLoading && latestDate !== null}
   <h2>National</h2>
   <ExplanationText data={ national } />
   <div class="container-national" in:fade={{duration: 500}}>
@@ -36,7 +37,7 @@
         color="purple"
         positiveValue="negative"
         negativeValue="positive"
-        latestDate={ time.monthYearFormat(time.parseTime(national.latest['month_date'])) }
+        { latestDate }
         />
       <BarChart
         data={ national }
@@ -59,7 +60,7 @@
         color="orange"
         positiveValue="positive"
         negativeValue="negative"
-        latestDate={ time.monthYearFormat(time.parseTime(national.latest['month_date'])) }
+        { latestDate }
         />
       <BarChart
         data={ national }
@@ -75,7 +76,7 @@
   </div>
   <h2>Search for your county</h2>
   <Search countiesMeta={ metaCounties } />
-  <TableMetrics dataLatest={ latestCounties } dataStates={ metaStates } latestMonth={ 'April 2025' } />
+  <TableMetrics dataLatest={ latestCounties } dataStates={ metaStates } latestMonth={ latestDate } />
 {/if}
 
 <style lang="scss">
